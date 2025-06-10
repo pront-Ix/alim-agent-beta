@@ -1,0 +1,76 @@
+from fastapi import APIRouter, HTTPException
+from typing import List, Optional
+from app.models.chat_models import ChatRequest, ChatResponse, SessionInfo
+
+import os
+import json
+
+from app.core.alim_agent import get_alim_response, MEMORY_DIR, get_session_history
+
+router = APIRouter()
+
+@router.post("/message", response_model=ChatResponse)
+async def chat_message(request: ChatRequest):
+    try:
+        response_content = await get_alim_response(request.message, request.session_id)
+        return ChatResponse(answer=response_content, session_id=request.session_id)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.get("/sessions", response_model=List[SessionInfo])
+async def list_sessions():
+    sessions = []
+    # Assurez-vous que MEMORY_DIR est bien défini et existe
+    if not os.path.exists(MEMORY_DIR):
+        return [] # Retourne une liste vide si le dossier de mémoire n'existe pas
+
+    for filename in os.listdir(MEMORY_DIR):
+        if filename.endswith(".json"):
+            session_id = filename[:-5]
+            file_path = os.path.join(MEMORY_DIR, filename)
+
+            last_message_preview = None
+            timestamp = None
+
+            try:
+                with open(file_path, 'r', encoding='utf-8') as f:
+                    messages_data = json.load(f)
+                    if messages_data:
+                        # Assurez-vous que le message est un dictionnaire avec 'content'
+                        last_message = messages_data[-1]
+                        # Vérifie si 'content' existe avant de l'accéder
+                        if 'content' in last_message:
+                            preview_text = last_message.get('content', '')
+                            last_message_preview = preview_text[:50] + '...' if len(preview_text) > 50 else preview_text
+
+                    timestamp = os.path.getmtime(file_path)
+                    import datetime
+                    timestamp = datetime.datetime.fromtimestamp(timestamp).strftime("%Y-%m-%d %H:%M")
+
+            except json.JSONDecodeError:
+                print(f"Erreur: Le fichier JSON {filename} est corrompu ou vide.")
+            except Exception as e:
+                print(f"Erreur lors de la lecture du fichier de session {filename}: {e}")
+
+            sessions.append(SessionInfo(
+                session_id=session_id,
+                last_message_preview=last_message_preview,
+                timestamp=timestamp
+            ))
+
+    sessions.sort(key=lambda x: x.timestamp if x.timestamp else "", reverse=True)
+
+    return sessions
+
+@router.get("/sessions/{session_id}", response_model=List[dict]) # Change ici pour List[dict] car ChatRequest n'est pas ce que tu renvoies
+async def get_session_messages(session_id: str):
+    messages = get_session_history(session_id)
+    serializable_messages = []
+    for msg in messages:
+        # Assurez-vous que msg.type et msg.content sont des chaînes
+        serializable_messages.append({"message": str(msg.content), "sender": str(msg.type)})
+
+    if not serializable_messages:
+        raise HTTPException(status_code=404, detail="Session not found or empty.")
+
+    return serializable_messages

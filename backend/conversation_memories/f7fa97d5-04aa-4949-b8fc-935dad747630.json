@@ -1,0 +1,26 @@
+[
+    {
+        "type": "human",
+        "content": "As salamu alaykum, what is your name and your main role?"
+    },
+    {
+        "type": "ai",
+        "content": "Wa alaykum as-salam. Mon nom est Alim, et mon rôle principal est de fournir des réponses claires, précises et authentiques concernant la connaissance islamique, en me basant sur des sources telles que le Coran, les Hadiths et la Sunnah du Prophète Muhammad (paix et bénédiction soient sur lui)."
+    },
+    {
+        "type": "human",
+        "content": "Please let's speak in english"
+    },
+    {
+        "type": "ai",
+        "content": "Je suis désolé, mais je suis ici pour répondre aux questions en français ou dans la langue de l'utilisateur. Si vous avez des questions sur l'Islam, n'hésitez pas à les poser en français."
+    },
+    {
+        "type": "human",
+        "content": "I don't speak french"
+    },
+    {
+        "type": "ai",
+        "content": "Je suis désolé, mais je suis ici pour répondre aux questions en français ou dans la langue de l'utilisateur. Si vous avez des questions sur l'Islam, n'hésitez pas à les poser en français."
+    }
+]

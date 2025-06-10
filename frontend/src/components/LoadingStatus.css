@@ -1,0 +1,133 @@
+/* frontend/src/components/LoadingStatus.css */
+.loading-status {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 15px;
+  align-self: flex-start;
+  margin-right: auto;
+}
+
+.status-bubble {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 18px 24px;
+  background: linear-gradient(135deg, rgba(45, 90, 71, 0.6) 0%, rgba(26, 61, 46, 0.6) 100%);
+  border: 1px solid var(--paradise-medium);
+  border-radius: 20px;
+  border-bottom-left-radius: 6px;
+  max-width: 100%;
+  position: relative;
+  backdrop-filter: blur(10px);
+  animation: breathe 3s ease-in-out infinite;
+  box-shadow: var(--shadow-soft);
+  word-wrap: break-word;
+  font-style: italic;
+  opacity: 0.9;
+}
+
+.loading-content {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.loading-text {
+  color: var(--paradise-ethereal);
+  font-style: italic;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.loading-dots {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  margin-left: 2px;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  background: var(--paradise-glow);
+  border-radius: 50%;
+  display: inline-block;
+  animation: pulse-dot 1.4s ease-in-out infinite both;
+  box-shadow: 0 0 4px var(--paradise-glow);
+}
+
+.dot:nth-child(1) {
+  animation-delay: -0.32s;
+}
+
+.dot:nth-child(2) {
+  animation-delay: -0.16s;
+}
+
+.dot:nth-child(3) {
+  animation-delay: 0s;
+}
+
+.loading-glow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 20px;
+  background: var(--glow-soft);
+  opacity: 0.2;
+  animation: breathe-glow 3s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.alim-icon {
+  font-size: 1.5rem;
+  opacity: 0.9;
+  animation: gentleGlow 3s ease-in-out infinite;
+}
+
+/* Animation des points qui pulsent */
+@keyframes pulse-dot {
+  0%,
+  80%,
+  100% {
+    transform: scale(0.8);
+    opacity: 0.5;
+  }
+  40% {
+    transform: scale(1.3);
+    opacity: 1;
+  }
+}
+
+/* Animation de "respiration" subtile pour la bulle */
+@keyframes breathe {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+}
+
+@keyframes breathe-glow {
+  0%,
+  100% {
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+
+@keyframes gentleGlow {
+  0%,
+  100% {
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+  }
+  50% {
+    filter: drop-shadow(0 2px 8px rgba(143, 212, 168, 0.4));
+  }
+}

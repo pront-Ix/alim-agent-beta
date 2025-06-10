@@ -1,0 +1,115 @@
+/* frontend/src/components/ChatWindow.css */
+.chat-window {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 10px;
+  border-bottom: 1px solid var(--paradise-medium);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: 0;
+  position: relative;
+}
+
+.messages-container {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding-right: 10px;
+}
+
+/* Effet de dégradé en haut et en bas pour indiquer le scroll */
+.chat-window::before,
+.chat-window::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 20px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.chat-window::before {
+  top: 0;
+  background: linear-gradient(to bottom, var(--paradise-deep), transparent);
+}
+
+.chat-window::after {
+  bottom: 0;
+  background: linear-gradient(to top, var(--paradise-deep), transparent);
+}
+
+/* Styles pour les bulles de message */
+.message-bubble {
+  margin-bottom: 10px;
+  padding: 10px 15px;
+  border-radius: 15px;
+  max-width: 70%;
+  word-wrap: break-word;
+  box-shadow: var(--shadow-soft);
+  animation: slideIn 0.4s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Modifier le style pour les bulles de message utilisateur */
+.message-bubble.user {
+  background: linear-gradient(135deg, var(--paradise-bright) 0%, var(--paradise-light) 100%);
+  color: var(--paradise-divine);
+  align-self: flex-end;
+  margin-left: auto;
+  border-bottom-right-radius: 2px;
+  position: relative;
+  padding-right: 40px; /* Ajouter de l'espace à droite pour l'icône */
+}
+
+.message-bubble.user::before {
+  position: absolute;
+  right: 10px; /* Positionner à l'intérieur de la bulle */
+  bottom: 5px;
+  font-size: 1.2rem;
+  opacity: 0.8;
+}
+
+/* Modifier le style pour les bulles de message Alim */
+.message-bubble.alim {
+  background: linear-gradient(135deg, rgba(45, 90, 71, 0.8) 0%, rgba(26, 61, 46, 0.8) 100%);
+  color: var(--paradise-ethereal);
+  align-self: flex-start;
+  margin-right: auto;
+  border-bottom-left-radius: 2px;
+  border: 1px solid var(--paradise-medium);
+  position: relative;
+  padding-left: 40px; /* Ajouter de l'espace à gauche pour l'icône */
+}
+
+.message-bubble.alim::before {
+  position: absolute;
+  left: 10px; /* Positionner à l'intérieur de la bulle */
+  bottom: 5px;
+  font-size: 1.2rem;
+  opacity: 0.9;
+  animation: gentleGlow 3s ease-in-out infinite;
+}
+
+@keyframes gentleGlow {
+  0%,
+  100% {
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+  }
+  50% {
+    filter: drop-shadow(0 2px 8px rgba(143, 212, 168, 0.4));
+  }
+}

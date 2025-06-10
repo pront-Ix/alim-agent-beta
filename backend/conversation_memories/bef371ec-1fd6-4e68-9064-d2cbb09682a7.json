@@ -1,0 +1,46 @@
+[
+    {
+        "type": "human",
+        "content": "Bonjour Alim..."
+    },
+    {
+        "type": "human",
+        "content": "Bonjour Alim..."
+    },
+    {
+        "type": "ai",
+        "content": "Bonjour ! Comment puis-je vous aider aujourd'hui avec vos questions sur l'Islam ?"
+    },
+    {
+        "type": "human",
+        "content": "Quelle sont les fondements de la sounnah?"
+    },
+    {
+        "type": "ai",
+        "content": "Les fondements de la Sunnah consistent à s'attacher à la voie sur laquelle étaient les compagnons du Prophète Muhammad (paix et bénédiction soient sur lui). Cela inclut suivre leur exemple et délaisser les innovations, car toute innovation est considérée comme un égarement. La Sunnah est également vue comme un commentaire du Coran et en est la signification. Il est important de suivre la Sunnah sans recourir à la raison ou aux passions, mais simplement en l'acceptant et en y croyant. \n\nCes principes sont essentiels pour comprendre et pratiquer la Sunnah dans la vie quotidienne des musulmans."
+    },
+    {
+        "type": "human",
+        "content": "super Alim merci beaucoup"
+    },
+    {
+        "type": "ai",
+        "content": "Je vous en prie ! Si vous avez d'autres questions sur l'Islam ou des sujets liés, n'hésitez pas à demander. Je suis là pour vous aider."
+    },
+    {
+        "type": "human",
+        "content": "Comment faire la priere?"
+    },
+    {
+        "type": "ai",
+        "content": "Je ne suis pas en mesure de répondre à cette question basée sur les informations dont je dispose actuellement. Veuillez reformuler votre question ou consulter une autre source fiable."
+    },
+    {
+        "type": "human",
+        "content": "d'accord merci bien"
+    },
+    {
+        "type": "ai",
+        "content": "Je vous en prie ! Si vous avez d'autres questions sur l'Islam ou des sujets liés, n'hésitez pas à demander. Je suis là pour vous aider."
+    }
+]

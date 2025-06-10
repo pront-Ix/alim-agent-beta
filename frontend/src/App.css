@@ -1,0 +1,347 @@
+/* Variables CSS pour le thème "Vert Paradise" */
+:root {
+  /* Couleurs de base - Verts paradisiaques */
+  --paradise-deep: #0a1f0f;
+  --paradise-dark: #1a3d2e;
+  --paradise-medium: #2d5a47;
+  --paradise-light: #4a8b6b;
+  --paradise-bright: #6bb88a;
+  --paradise-glow: #8fd4a8;
+  --paradise-ethereal: #b8f2d0;
+  --paradise-divine: #e8fff0;
+
+  /* Couleurs d'accent */
+  --gold-divine: #ffd700;
+  --gold-soft: #f4e4a6;
+  --silver-moon: #e6f3ff;
+  --pearl-white: #fefffe;
+
+  /* Ombres et effets */
+  --shadow-soft: 0 4px 20px rgba(106, 184, 138, 0.15);
+  --shadow-divine: 0 8px 32px rgba(106, 184, 138, 0.25);
+  --glow-soft: 0 0 20px rgba(143, 212, 168, 0.3);
+  --glow-strong: 0 0 40px rgba(143, 212, 168, 0.5);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, var(--paradise-deep) 0%, var(--paradise-dark) 50%, var(--paradise-medium) 100%);
+  color: var(--paradise-divine);
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Effet de particules flottantes en arrière-plan */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: radial-gradient(circle at 20% 20%, rgba(143, 212, 168, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(106, 184, 138, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 40% 60%, rgba(184, 242, 208, 0.05) 0%, transparent 50%);
+  animation: float 20s ease-in-out infinite;
+  pointer-events: none;
+  z-index: -1;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  33% {
+    transform: translateY(-20px) rotate(1deg);
+  }
+  66% {
+    transform: translateY(10px) rotate(-1deg);
+  }
+}
+
+#root {
+  height: 100%;
+}
+
+.App {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+}
+
+/* Sidebar Paradise */
+.sidebar {
+  width: 320px;
+  background: linear-gradient(180deg, var(--paradise-dark) 0%, var(--paradise-deep) 100%);
+  border-right: 1px solid var(--paradise-light);
+  box-shadow: var(--shadow-divine);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.sidebar::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--paradise-glow), transparent);
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0%,
+  100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.sidebar-header {
+  padding: 30px 25px;
+  text-align: center;
+  border-bottom: 1px solid var(--paradise-medium);
+  background: linear-gradient(135deg, var(--paradise-medium) 0%, var(--paradise-dark) 100%);
+}
+
+.sidebar h2 {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: var(--paradise-ethereal);
+  text-shadow: var(--glow-soft);
+  margin-bottom: 8px;
+  margin-top: 0;
+}
+
+.subtitle {
+  color: var(--paradise-glow);
+  font-size: 0.9rem;
+  opacity: 0.9;
+  font-style: italic;
+}
+
+.new-chat-btn {
+  margin: 20px;
+  padding: 15px 20px;
+  background: linear-gradient(135deg, var(--paradise-bright) 0%, var(--paradise-light) 100%);
+  border: none;
+  border-radius: 15px;
+  color: var(--paradise-divine);
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: var(--shadow-soft);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+  overflow: hidden;
+}
+
+.new-chat-btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.new-chat-btn:hover::before {
+  left: 100%;
+}
+
+.new-chat-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-divine);
+  background: linear-gradient(135deg, var(--paradise-glow) 0%, var(--paradise-bright) 100%);
+}
+
+.btn-icon {
+  font-size: 1.2rem;
+}
+
+.session-list {
+  flex-grow: 1;
+  padding: 10px 20px;
+  overflow-y: auto;
+  padding-right: 0.5px;
+}
+
+.session-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 15px;
+  margin-bottom: 10px;
+  background: rgba(45, 90, 71, 0.3);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 1px solid transparent;
+}
+
+.session-item:hover {
+  background: rgba(74, 139, 107, 0.2);
+  transform: translateX(5px);
+  border-color: var(--paradise-light);
+}
+
+.session-item.active {
+  background: linear-gradient(135deg, var(--paradise-light) 0%, var(--paradise-medium) 100%);
+  border-color: var(--paradise-bright);
+  box-shadow: var(--glow-soft);
+}
+
+.session-icon {
+  font-size: 1.5rem;
+  opacity: 0.8;
+}
+
+.session-content {
+  flex: 1;
+}
+
+.session-item h4 {
+  color: var(--paradise-ethereal);
+  font-size: 0.95rem;
+  margin: 0 0 4px 0;
+}
+
+.session-item p {
+  color: var(--paradise-glow);
+  font-size: 0.8rem;
+  opacity: 0.8;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin: 0;
+}
+
+.no-sessions {
+  color: var(--paradise-glow);
+  text-align: center;
+  font-style: italic;
+  opacity: 0.7;
+}
+
+.sidebar-footer {
+  padding: 20px;
+  border-top: 1px solid var(--paradise-medium);
+  background: rgba(26, 61, 46, 0.8);
+}
+
+.spiritual-quote {
+  font-size: 0.85rem;
+  color: var(--paradise-glow);
+  text-align: center;
+  font-style: italic;
+  line-height: 1.4;
+  opacity: 0.9;
+}
+
+/* Main Content Paradise */
+.main-content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(135deg, var(--paradise-deep) 0%, var(--paradise-dark) 100%);
+  position: relative;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: var(--shadow-divine);
+  margin: 20px;
+}
+
+.chat-header {
+  text-align: center;
+  padding: 30px 20px;
+  position: relative;
+  border-bottom: 1px solid var(--paradise-medium);
+  background: linear-gradient(135deg, rgba(45, 90, 71, 0.3) 0%, rgba(26, 61, 46, 0.3) 100%);
+  margin-bottom: 20px;
+  border-radius: 15px;
+  flex-shrink: 0;
+}
+
+.header-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 200px;
+  height: 100px;
+  background: radial-gradient(ellipse, var(--paradise-glow) 0%, transparent 70%);
+  opacity: 0.1;
+  animation: pulse 4s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.1;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.2);
+    opacity: 0.2;
+  }
+}
+
+.chat-header h1 {
+  font-size: 2.2rem;
+  color: var(--paradise-ethereal);
+  text-shadow: var(--glow-soft);
+  margin-bottom: 10px;
+  position: relative;
+  z-index: 1;
+}
+
+.chat-header p {
+  color: var(--paradise-glow);
+  font-size: 1.1rem;
+  opacity: 0.9;
+  position: relative;
+  z-index: 1;
+}
+
+/* Scrollbar personnalisée */
+.session-list::-webkit-scrollbar,
+.chat-window::-webkit-scrollbar {
+  width: 6px;
+}
+
+.session-list::-webkit-scrollbar-track,
+.chat-window::-webkit-scrollbar-track {
+  background: var(--paradise-deep);
+  border-radius: 3px;
+}
+
+.session-list::-webkit-scrollbar-thumb,
+.chat-window::-webkit-scrollbar-thumb {
+  background: var(--paradise-light);
+  border-radius: 3px;
+}
+
+.session-list::-webkit-scrollbar-thumb:hover,
+.chat-window::-webkit-scrollbar-thumb:hover {
+  background: var(--paradise-bright);
+}

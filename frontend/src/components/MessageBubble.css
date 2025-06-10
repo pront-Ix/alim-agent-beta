@@ -1,0 +1,193 @@
+/* frontend/src/components/MessageBubble.css */
+.message-bubble {
+  margin-bottom: 15px;
+  padding: 18px 24px;
+  border-radius: 20px;
+  max-width: 75%;
+  word-wrap: break-word;
+  box-shadow: var(--shadow-soft);
+  font-size: 1rem;
+  line-height: 1.6;
+  position: relative;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  animation: slideIn 0.4s ease-out;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.message-content {
+  position: relative;
+  z-index: 2;
+}
+
+.message-bubble.user {
+  background: linear-gradient(135deg, var(--paradise-bright) 0%, var(--paradise-light) 100%);
+  color: var(--paradise-divine);
+  align-self: flex-end;
+  margin-left: auto;
+  border-bottom-right-radius: 6px;
+  padding-right: 40px; /* Espace pour l'icône */
+  position: relative;
+}
+
+.message-bubble.user::after {
+ 
+  position: absolute;
+  right: 12px;
+  bottom: 10px;
+  font-size: 1.2rem;
+  opacity: 0.8;
+}
+
+.message-bubble.user:hover {
+  box-shadow: var(--shadow-divine);
+  transform: translateY(-2px);
+}
+
+.message-bubble.alim {
+  background: linear-gradient(135deg, rgba(45, 90, 71, 0.8) 0%, rgba(26, 61, 46, 0.8) 100%);
+  color: var(--paradise-ethereal);
+  align-self: flex-start;
+  margin-right: auto;
+  border-bottom-left-radius: 6px;
+  border: 1px solid var(--paradise-medium);
+  padding-left: 40px; /* Espace pour l'icône */
+  position: relative;
+}
+
+.message-bubble.alim::after {
+  position: absolute;
+  left: 12px;
+  bottom: 10px;
+  font-size: 1.2rem;
+  opacity: 0.9;
+  animation: gentleGlow 3s ease-in-out infinite;
+}
+
+.message-bubble.alim:hover {
+  box-shadow: var(--shadow-divine);
+  transform: translateY(-2px);
+}
+
+@keyframes gentleGlow {
+  0%,
+  100% {
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+  }
+  50% {
+    filter: drop-shadow(0 2px 8px rgba(143, 212, 168, 0.4));
+  }
+}
+
+/* Styles pour le formatage Markdown */
+.text-line {
+  margin-bottom: 8px;
+}
+
+.text-line:last-child {
+  margin-bottom: 0;
+}
+
+.list-item {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 12px;
+  line-height: 1.5;
+}
+
+.list-item:last-child {
+  margin-bottom: 0;
+}
+
+.list-number,
+.list-bullet {
+  font-weight: bold;
+  margin-right: 8px;
+  flex-shrink: 0;
+  color: var(--paradise-glow);
+  font-size: 1.1rem;
+}
+
+.list-title {
+  font-weight: bold;
+  margin-right: 4px;
+  color: inherit;
+}
+
+.message-bubble.user .list-title {
+  color: var(--paradise-divine);
+}
+
+.message-bubble.alim .list-title {
+  color: var(--paradise-ethereal);
+}
+
+.list-separator {
+  margin-right: 6px;
+  font-weight: bold;
+}
+
+.list-description {
+  flex: 1;
+  line-height: 1.5;
+}
+
+/* Styles pour le texte en gras */
+strong {
+  font-weight: 600;
+  color: inherit;
+}
+
+.message-bubble.user strong {
+  color: var(--pearl-white);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.message-bubble.alim strong {
+  color: var(--paradise-glow);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* Amélioration de la lisibilité */
+.message-bubble p {
+  margin-bottom: 10px;
+}
+
+.message-bubble p:last-child {
+  margin-bottom: 0;
+}
+
+/* --- Styles pour l'animation de dévoilement progressif --- */
+.word-reveal {
+  opacity: 0; /* Commence invisible */
+  transform: translateY(5px); /* Légèrement décalé vers le bas */
+  animation: revealWord 0.4s ease-out forwards; /* Durée de l'animation, easing, et reste en place */
+  display: inline-block; /* Permet d'appliquer la transformation et opacité à chaque mot */
+}
+
+/* L'animation elle-même est appliquée par JavaScript avec un délai.
+   Chaque span individuel n'a pas besoin d'un délai CSS ici,
+   car leur apparition est contrôlée par le setInterval de JS. */
+
+@keyframes revealWord {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+/* --- Fin des styles pour l'animation de dévoilement progressif --- */
