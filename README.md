@@ -141,7 +141,7 @@ Alim_app/
 │   ├── conversation_memories/    # Stores chat history (ignored by Git)
 │   ├── requirements.txt          # Python dependencies
 │   └── .venv/                    # Python virtual environment (ignored by Git)
-├─�� frontend/
+├── frontend/
 │   ├── public/
 │   ├── src/
 │   │   ├── api.js                # Frontend API calls to backend
