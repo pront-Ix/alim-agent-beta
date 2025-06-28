@@ -8,3 +8,7 @@ __pycache__/
 
 # Conversation memories
 conversation_memories/
+
+# macOS files
+.DS_Store
+**/.DS_Store

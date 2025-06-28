@@ -64,3 +64,4 @@ uvicorn==0.34.3
 xxhash==3.5.0
 yarl==1.20.0
 zstandard==0.23.0
+pypdf==4.2.0
