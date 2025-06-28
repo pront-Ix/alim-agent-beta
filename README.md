@@ -1,11 +1,10 @@
-# Alim_app: AI-Powered Islamic Knowledge Assistant
+# Alim: AI-Powered Islamic Knowledge Assistant
 
-![Project Background Image Placeholder](path/to/your/project_image.jpg)
-*Replace `path/to/your/project_image.jpg` with the actual path or URL of your project's main image.*
+![Alim App Screenshot](images/Alim-app.png)
 
 ## Project Description
 
-Alim_app is an innovative AI-powered application designed to provide accessible and accurate Islamic knowledge. Built for the Build4Barakah AI Hackathon, this project aims to enhance how Muslims engage with faith and learning by leveraging artificial intelligence to deliver comprehensive and contextually relevant information. It serves as a smart, accessible, and future-proof learning tool, making complex religious information understandable and readily available.
+Alim is an innovative AI-powered application designed to provide accessible and accurate Islamic knowledge. Built for the world wide muslims, this project aims to enhance how Muslims engage with faith and learning by leveraging artificial intelligence to deliver comprehensive and contextually relevant information. It serves as a smart, accessible, and future-proof learning tool, making complex religious information understandable and readily available.
 
 ## Features
 
@@ -35,7 +34,7 @@ Alim_app is an innovative AI-powered application designed to provide accessible 
 
 ## Setup and Installation
 
-To set up and run the Alim_app locally, follow these steps:
+To set up and run the Alim locally, follow these steps:
 
 ### Prerequisites
 
@@ -46,7 +45,7 @@ To set up and run the Alim_app locally, follow these steps:
 
 ```bash
 git clone https://github.com/pront-Ix/alim-agent-beta.git
-cd Alim_app
+cd alim-agent-beta
 ```
 
 ### 2. Backend Setup
@@ -89,7 +88,7 @@ python build_vector_store.py
 Open a new terminal and navigate to the `frontend` directory:
 
 ```bash
-cd ../frontend
+cd ./frontend
 ```
 
 Install the Node.js dependencies:
