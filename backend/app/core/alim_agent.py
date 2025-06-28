@@ -1,4 +1,3 @@
-# backend/app/core/alim_agent.py
 import os
 import json
 from typing import List, TypedDict
