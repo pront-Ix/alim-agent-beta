@@ -158,3 +158,43 @@ Contributions are welcome! Please feel free to fork the repository, create a new
 ## License
 
 [Specify your license here, e.g., MIT License]
+
+## Contribution Guide for Muslim Developers
+
+As-salamu alaykum! Welcome to the Alim project. Your contributions are invaluable in helping us build a beneficial AI tool for the Ummah.
+
+This guide is specifically tailored to help Muslim developers contribute effectively while upholding the Islamic principles that guide this project.
+
+### Our Shared Vision
+Our goal is to create an AI assistant that provides accurate, authentic, and accessible Islamic knowledge, serving as a reliable resource for Muslims worldwide. We strive for excellence in both technology and adherence to Islamic teachings.
+
+### How to Contribute (with Barakah in mind)
+
+1.  **Intention (Niyyah):** Before you begin, renew your intention to contribute for the sake of Allah (SWT) and to benefit the Muslim community. This will imbue your work with Barakah (blessings).
+
+2.  **Explore and Understand:** Familiarize yourself with the existing codebase, project structure, and the current features of Alim. Understand how the AI agent processes information and generates responses.
+
+3.  **Choose a Task:** Look for open issues, suggest new features, or identify areas for improvement. Contributions can range from bug fixes, UI/UX enhancements, backend optimizations, to expanding the knowledge base.
+
+4.  **Knowledge Base Expansion (Crucial!):**
+    *   **Authenticity is Key:** When adding or modifying Islamic knowledge, ensure your sources are authentic and reliable (e.g., Quran, authentic Hadith collections, works of reputable scholars).
+    *   **Clarity and Accuracy:** Present information clearly, concisely, and accurately. Avoid personal opinions or interpretations unless explicitly stated as such and supported by scholarly consensus.
+    *   **Multi-language Support:** If you are adding content in a language other than English, please ensure it is accurately translated and clearly marked.
+    *   **PDFs Welcome:** You can add new PDF documents to the `backend/app/core/knowledge_base/` directory. Remember to rebuild the vector store after adding new files.
+
+5.  **Code Contributions:**
+    *   **Adhere to Conventions:** Follow the existing coding style, naming conventions, and architectural patterns. Consistency is vital for collaborative projects.
+    *   **Testing:** If applicable, write unit tests for your new features or bug fixes to ensure stability and correctness.
+    *   **Code Review (Shura):** Be open to feedback and constructive criticism during code reviews. This is a process of mutual learning and improvement.
+
+6.  **Git Workflow:**
+    *   **Fork the Repository:** Start by forking the `alim-agent-beta` repository to your GitHub account.
+    *   **Create a New Branch:** Create a new branch for your feature or bug fix (e.g., `feature/add-prayer-times` or `fix/chat-display-bug`).
+    *   **Commit Regularly:** Make small, atomic commits with clear and descriptive messages.
+    *   **Pre-commit Hook:** The project uses a `pre-commit` hook to automatically rebuild the FAISS vector store when knowledge base files are changed. Ensure this hook is active in your local setup (`.git/hooks/pre-commit` should be executable).
+    *   **Pull Request (PR):** Once your changes are ready, submit a Pull Request to the `main` branch of the original repository. Provide a clear description of your changes and why they are needed.
+
+### Communication
+We encourage open and respectful communication. If you have questions, suggestions, or need assistance, please open an issue on GitHub or reach out through the community channels (if any are established).
+
+Jazakallahu Khairan for your dedication and effort! May Allah (SWT) accept your contributions and make this project a source of immense benefit for the Ummah.
