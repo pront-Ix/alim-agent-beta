@@ -131,24 +131,35 @@ Alim_app/
 │   │   │   └── chat.py           # Chat API endpoint
 │   │   ├── core/
 │   │   │   ├── alim_agent.py     # AI agent logic
-│   │   │   └── islamic_knowledge_base.txt # Raw knowledge base
+│   │   │   └── knowledge_base/   # Directory for .txt and .pdf knowledge files
+│   │   │       └── islamic_knowledge_base.txt # Example text knowledge file
+│   │   │       └── 023-OUSOUL-SUNNA-DE-IMAM-AHMAD-IBN-HANBAL.pdf # Example PDF knowledge file
 │   │   ├── models/
 │   │   │   └── chat_models.py    # Pydantic models for chat
 │   │   └── main.py               # FastAPI application entry point
-│   ├── build_vector_store.py     # Script to build FAISS index
-│   ├── conversation_memories/    # Stores chat history
-│   ├── faiss_index/              # FAISS vector store files
-│   └── requirements.txt          # Python dependencies
-└── frontend/
-    ├── public/
-    ├── src/
-    │   ├── api.js                # Frontend API calls to backend
-    │   ├── App.jsx               # Main React component
-    │   ├── components/           # Reusable React components (ChatInput, ChatWindow, etc.)
-    │   └── main.jsx              # React application entry point
-    ├── index.html                # Main HTML file
-    ├── package.json              # Frontend dependencies and scripts
-    └── vite.config.js            # Vite configuration
+│   ├── build_vector_store.py     # Script to build FAISS index from knowledge_base
+│   ├── conversation_memories/    # Stores chat history (ignored by Git)
+│   ├── requirements.txt          # Python dependencies
+│   └── .venv/                    # Python virtual environment (ignored by Git)
+├─�� frontend/
+│   ├── public/
+│   ├── src/
+│   │   ├── api.js                # Frontend API calls to backend
+│   │   ├── App.jsx               # Main React component
+│   │   ├── components/           # Reusable React components (ChatInput, ChatWindow, etc.)
+│   │   └── main.jsx              # React application entry point
+│   ├── index.html                # Main HTML file
+│   ├── package.json              # Frontend dependencies and scripts
+│   └── vite.config.js            # Vite configuration
+├── images/                       # Project screenshots and other images
+│   ├── Screenshot1.png
+│   ├── Screenshot2.png
+│   └── Screenshot3.png
+├── .git/                         # Git repository data (ignored by Git)
+│   └── hooks/
+│       └── pre-commit            # Git pre-commit hook for automating vector store build
+├── .gitignore                    # Specifies intentionally untracked files
+└── README.md                     # Project overview and documentation
 ```
 
 ## Contributing
