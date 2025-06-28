@@ -45,7 +45,7 @@ To set up and run the Alim_app locally, follow these steps:
 ### 1. Clone the Repository
 
 ```bash
-git clone https://your-github-repo-link # Replace with your actual GitHub repo link
+git clone https://github.com/pront-Ix/alim-agent-beta.git
 cd Alim_app
 ```
 
