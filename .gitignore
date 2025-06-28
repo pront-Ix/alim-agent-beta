@@ -12,3 +12,6 @@ conversation_memories/
 # macOS files
 .DS_Store
 **/.DS_Store
+
+# FAISS index
+faiss_index/

@@ -1,6 +1,8 @@
 # Alim: AI-Powered Islamic Knowledge Assistant
 
-![Alim App Screenshot](images/Alim-app.png)
+![Alim App Screenshot](images/Screenshot1.png)
+![Alim App Screenshot](images/Screenshot2.png)
+![Alim App Screenshot](images/Screenshot3.png)
 
 ## Project Description
 
