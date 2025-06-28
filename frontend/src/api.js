@@ -47,7 +47,7 @@ export const fetchSessionMessages = async (sessionId) => {
     // Les messages sont dans le format { message: "...", sender: "..." }
     return data.map(msg => ({ text: msg.message, sender: msg.sender === 'human' ? 'user' : 'alim' }));
   } catch (error) {
-    console.error(`Erreur lors de la récupération des messages pour la session ${sessionId}:`, error);
+    console.error(`Error retrieving messages for session ${sessionId}:`, error);
     return [];
   }
 };

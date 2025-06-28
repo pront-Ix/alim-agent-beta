@@ -46,7 +46,7 @@ const ChatInput = ({ onSendMessage, isLoading }) => {
             ) : (
               <>
                 <span className="send-icon"></span>
-                Envoyer
+                Send
               </>
             )}
           </span>

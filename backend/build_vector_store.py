@@ -38,7 +38,7 @@ def build_and_save_vector_store():
         vector_store.save_local(FAISS_INDEX_PATH)
         print(f"Vector store sauvegardé localement à : {FAISS_INDEX_PATH}")
     except Exception as e:
-        print(f"Erreur lors de la construction ou de la sauvegarde du vector store : {e}")
+        print(f"Error building or saving the vector store: {e}")
 
 if __name__ == "__main__":
     build_and_save_vector_store()

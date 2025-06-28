@@ -73,7 +73,7 @@ const parseMarkdown = (text) => {
       )
     }
 
-    // Ligne vide
+    // Empty line
     return <br key={index} />
   })
 

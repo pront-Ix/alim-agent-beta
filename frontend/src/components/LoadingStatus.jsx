@@ -1,6 +1,6 @@
 import "./LoadingStatus.css"
 
-const LoadingStatus = ({ text = "Un instant" }) => {
+const LoadingStatus = ({ text = "One moment" }) => {
   return (
     <div className="loading-status">
       <div className="status-bubble">

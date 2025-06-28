@@ -90,7 +90,7 @@ function App() {
       const updatedSessions = await listChatSessions()
       setSessionList(updatedSessions)
     } catch (error) {
-      console.error("Erreur lors de l'envoi du message:", error)
+      console.error("Error sending message:", error)
       const errorMessage = { text: "Désolé, une erreur est survenue. Veuillez réessayer plus tard.", sender: "alim" }
       setMessages((prevMessages) => [...prevMessages, errorMessage])
     } finally {

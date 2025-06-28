@@ -31,7 +31,7 @@ app.include_router(chat.router, prefix="/api/v1/chat", tags=["Chat"])
 
 @app.get("/")
 async def read_root():
-    return {"message": "Bienvenue sur l'API d'Alim !"}
+    return {"message": "Welcome to the Alim API!"}
 
 @app.get("/health")
 async def health_check():

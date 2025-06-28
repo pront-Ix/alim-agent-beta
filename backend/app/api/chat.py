@@ -67,7 +67,7 @@ async def get_session_messages(session_id: str):
     messages = get_session_history(session_id)
     serializable_messages = []
     for msg in messages:
-        # Assurez-vous que msg.type et msg.content sont des chaînes
+        # Ensure msg.type and msg.content are strings
         serializable_messages.append({"message": str(msg.content), "sender": str(msg.type)})
 
     if not serializable_messages:

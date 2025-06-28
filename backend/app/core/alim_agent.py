@@ -192,6 +192,6 @@ async def get_alim_response(user_message: str, session_id: str) -> str:
     except Exception as e:
         print(f"Erreur lors de l'invocation de l'agent Alim : {e}")
         chat_history.append(HumanMessage(content=user_message))
-        # On ne met pas la réponse d'Alim si ça a échoué.
+        # We don't include Alim's response if it failed.
         save_session_history(session_id, chat_history)
         raise e
