@@ -5,3 +5,6 @@ node_modules
 # Python bytecode
 __pycache__/
 *.pyc
+
+# Conversation memories
+conversation_memories/
