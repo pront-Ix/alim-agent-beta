@@ -170,7 +170,7 @@ Contributions are welcome! Please feel free to fork the repository, create a new
 
 ## License
 
-[Specify your license here, e.g., MIT License]
+MIT License
 
 ## Contribution Guide for Muslim Developers
 
