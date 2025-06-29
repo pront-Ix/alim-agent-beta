@@ -160,3 +160,34 @@
 .send-button:hover:not(:disabled)::before {
   left: 100%;
 }
+
+.mic-button {
+  background: none;
+  border: none;
+  color: var(--paradise-glow);
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.mic-button:hover {
+  color: var(--paradise-bright);
+}
+
+.mic-button.recording {
+  color: red;
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+

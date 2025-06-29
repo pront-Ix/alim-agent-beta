@@ -1,6 +1,6 @@
-/* Variables CSS pour le thème "Vert Paradise" */
+/* CSS Variables for "Paradise Green" Theme */
 :root {
-  /* Couleurs de base - Verts paradisiaques */
+  /* Base Colors - Paradise Greens */
   --paradise-deep: #0a1f0f;
   --paradise-dark: #1a3d2e;
   --paradise-medium: #2d5a47;
@@ -10,13 +10,13 @@
   --paradise-ethereal: #b8f2d0;
   --paradise-divine: #e8fff0;
 
-  /* Couleurs d'accent */
+  /* Accent Colors */
   --gold-divine: #ffd700;
   --gold-soft: #f4e4a6;
   --silver-moon: #e6f3ff;
   --pearl-white: #fefffe;
 
-  /* Ombres et effets */
+  /* Shadows and Effects */
   --shadow-soft: 0 4px 20px rgba(106, 184, 138, 0.15);
   --shadow-divine: 0 8px 32px rgba(106, 184, 138, 0.25);
   --glow-soft: 0 0 20px rgba(143, 212, 168, 0.3);
@@ -38,7 +38,7 @@ body {
   position: relative;
 }
 
-/* Effet de particules flottantes en arrière-plan */
+/* Floating particle effect in the background */
 body::before {
   content: "";
   position: fixed;
@@ -78,7 +78,7 @@ body::before {
   backdrop-filter: blur(10px);
 }
 
-/* Sidebar Paradise */
+/* Paradise Sidebar */
 .sidebar {
   width: 320px;
   background: linear-gradient(180deg, var(--paradise-dark) 0%, var(--paradise-deep) 100%);
@@ -258,7 +258,7 @@ body::before {
   opacity: 0.9;
 }
 
-/* Main Content Paradise */
+/* Paradise Main Content */
 .main-content {
   flex-grow: 1;
   display: flex;
@@ -323,7 +323,7 @@ body::before {
   z-index: 1;
 }
 
-/* Scrollbar personnalisée */
+/* Custom Scrollbar */
 .session-list::-webkit-scrollbar,
 .chat-window::-webkit-scrollbar {
   width: 6px;
@@ -345,3 +345,9 @@ body::before {
 .chat-window::-webkit-scrollbar-thumb:hover {
   background: var(--paradise-bright);
 }
+
+.App.alim-speaking .chat-header {
+  border-color: var(--gold-divine);
+  box-shadow: 0 0 20px var(--gold-soft);
+}
+

@@ -1,127 +1,156 @@
-import { useState, useEffect } from "react"
-import ChatWindow from "./components/ChatWindow.jsx"
-import ChatInput from "./components/ChatInput.jsx"
-import { sendMessageToAlim, listChatSessions, fetchSessionMessages } from "./api"
-import "./App.css"
+import { useState, useEffect } from "react";
+import ChatWindow from "./components/ChatWindow.jsx";
+import ChatInput from "./components/ChatInput.jsx";
+import {
+  sendMessageToAlim,
+  listChatSessions,
+  fetchSessionMessages,
+  synthesizeSpeech,
+} from "./api";
+import "./App.css";
 
 function App() {
-  const [messages, setMessages] = useState([])
-  const [isLoading, setIsLoading] = useState(false)
-  const [currentSessionId, setCurrentSessionId] = useState(null)
-  const [sessionList, setSessionList] = useState([])
+  const [messages, setMessages] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isAlimSpeaking, setIsAlimSpeaking] = useState(false);
+  const [currentSessionId, setCurrentSessionId] = useState(null);
+  const [sessionList, setSessionList] = useState([]);
 
-  // Récupérer les sessions au chargement de l'application
+  // Fetch sessions on application load
   useEffect(() => {
-    // Fonction pour générer un UUID v4 simple
+    // Function to generate a simple UUID v4
     const generateUUID = () => {
       return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
         var r = (Math.random() * 16) | 0,
-          v = c === "x" ? r : (r & 0x3) | 0x8
-        return v.toString(16)
-      })
-    }
+          v = c === "x" ? r : (r & 0x3) | 0x8;
+        return v.toString(16);
+      });
+    };
 
     const loadInitialData = async () => {
-      // Tenter de charger le session_id depuis le localStorage
-      let storedSessionId = localStorage.getItem("alim_session_id")
-      let newSession = false
+      // Try to load the session_id from localStorage
+      let storedSessionId = localStorage.getItem("alim_session_id");
+      let newSession = false;
 
       if (!storedSessionId) {
-        storedSessionId = generateUUID()
-        localStorage.setItem("alim_session_id", storedSessionId)
-        newSession = true
+        storedSessionId = generateUUID();
+        localStorage.setItem("alim_session_id", storedSessionId);
+        newSession = true;
       }
-      setCurrentSessionId(storedSessionId)
-      console.log("Initial Session ID:", storedSessionId, "New session:", newSession)
+      setCurrentSessionId(storedSessionId);
+      console.log(
+        "Initial Session ID:",
+        storedSessionId,
+        "New session:",
+        newSession
+      );
 
-      // Charger la liste des sessions disponibles
-      const sessions = await listChatSessions()
-      setSessionList(sessions)
+      // Load the list of available sessions
+      const sessions = await listChatSessions();
+      setSessionList(sessions);
 
-      // Si c'est une nouvelle session, ou si la session stockée n'est pas dans la liste,
-      // démarrer avec un chat vide. Sinon, charger les messages de la session.
-      const sessionExists = sessions.some((s) => s.session_id === storedSessionId)
+      // If it's a new session, or if the stored session is not in the list,
+      // start with an empty chat. Otherwise, load the session messages.
+      const sessionExists = sessions.some(
+        (s) => s.session_id === storedSessionId
+      );
 
       if (newSession || !sessionExists) {
-        setMessages([]) // Démarrer une nouvelle conversation vide
-        console.log("Starting a new conversation.")
+        setMessages([]); // Start a new empty conversation
+        console.log("Starting a new conversation.");
       } else {
-        // Charger les messages de la session existante
-        await loadSessionMessages(storedSessionId)
+        // Load messages from the existing session
+        await loadSessionMessages(storedSessionId);
       }
-    }
+    };
 
-    loadInitialData()
-  }, []) // Exécuter une seule fois au montage du composant
+    loadInitialData();
+  }, []); // Execute only once when the component mounts
 
-  // Fonction pour charger les messages d'une session donnée
+  // Function to load messages for a given session
   const loadSessionMessages = async (sessionId) => {
-    setIsLoading(true)
+    setIsLoading(true);
     try {
-      const msgs = await fetchSessionMessages(sessionId)
-      setMessages(msgs)
-      setCurrentSessionId(sessionId) // Mettre à jour la session active
-      localStorage.setItem("alim_session_id", sessionId) // Sauvegarder dans localStorage
-      console.log(`Loaded messages for session: ${sessionId}`)
+      const msgs = await fetchSessionMessages(sessionId);
+      setMessages(msgs);
+      setCurrentSessionId(sessionId); // Update the active session
+      localStorage.setItem("alim_session_id", sessionId); // Save to localStorage
+      console.log(`Loaded messages for session: ${sessionId}`);
     } catch (error) {
-      console.error("Erreur lors du chargement des messages de session:", error)
-      setMessages([{ text: "Impossible de charger cette conversation.", sender: "alim" }])
+      console.error("Error loading session messages:", error);
+      setMessages([
+        { text: "Could not load this conversation.", sender: "alim" },
+      ]);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
-  const handleSendMessage = async (userMessage) => {
+  const handleSendMessage = async (userMessage, isVoiceInput = false) => {
     if (!currentSessionId) {
-      console.error("Session ID is not set. Cannot send message.")
-      return
+      console.error("Session ID is not set. Cannot send message.");
+      return;
     }
 
-    const newUserMessage = { text: userMessage, sender: "user" }
-    setMessages((prevMessages) => [...prevMessages, newUserMessage])
-    setIsLoading(true)
+    const newUserMessage = { text: userMessage, sender: "user" };
+    setMessages((prevMessages) => [...prevMessages, newUserMessage]);
+    setIsLoading(true);
 
     try {
-      const response = await sendMessageToAlim(userMessage, currentSessionId)
-      const alimResponse = { text: response.answer, sender: "alim" }
-      setMessages((prevMessages) => [...prevMessages, alimResponse])
+      const response = await sendMessageToAlim(userMessage, currentSessionId);
+      const alimResponse = { text: response.answer, sender: "alim" };
+      setMessages((prevMessages) => [...prevMessages, alimResponse]);
 
-      // Après l'envoi d'un message, rafraîchir la liste des sessions
-      const updatedSessions = await listChatSessions()
-      setSessionList(updatedSessions)
+      if (isVoiceInput) {
+        setIsAlimSpeaking(true);
+        const audioUrl = await synthesizeSpeech(response.answer);
+        const audio = new Audio(audioUrl);
+        audio.onended = () => setIsAlimSpeaking(false);
+        audio.play();
+      }
+
+      // After sending a message, refresh the session list
+      const updatedSessions = await listChatSessions();
+      setSessionList(updatedSessions);
     } catch (error) {
-      console.error("Error sending message:", error)
-      const errorMessage = { text: "Désolé, une erreur est survenue. Veuillez réessayer plus tard.", sender: "alim" }
-      setMessages((prevMessages) => [...prevMessages, errorMessage])
+      console.error("Error sending message:", error);
+      const errorMessage = {
+        text: "Sorry, an error occurred. Please try again later.",
+        sender: "alim",
+      };
+      setMessages((prevMessages) => [...prevMessages, errorMessage]);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   const startNewChat = async () => {
-    const newSessionId = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
-      var r = (Math.random() * 16) | 0,
-        v = c === "x" ? r : (r & 0x3) | 0x8
-      return v.toString(16)
-    })
-    setMessages([]) // Vider les messages pour la nouvelle session
-    setCurrentSessionId(newSessionId)
-    localStorage.setItem("alim_session_id", newSessionId) // Mettre à jour localStorage
-    const updatedSessions = await listChatSessions() // Rafraîchir la liste pour inclure la potentielle nouvelle session vide
-    setSessionList(updatedSessions)
-    console.log("Started new chat with ID:", newSessionId)
-  }
+    const newSessionId = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
+      /[xy]/g,
+      (c) => {
+        var r = (Math.random() * 16) | 0,
+          v = c === "x" ? r : (r & 0x3) | 0x8;
+        return v.toString(16);
+      }
+    );
+    setMessages([]); // Clear messages for the new session
+    setCurrentSessionId(newSessionId);
+    localStorage.setItem("alim_session_id", newSessionId); // Update localStorage
+    const updatedSessions = await listChatSessions(); // Refresh the list to include the potential new empty session
+    setSessionList(updatedSessions);
+    console.log("Started new chat with ID:", newSessionId);
+  };
 
   return (
-    <div className="App">
+    <div className={`App ${isAlimSpeaking ? "alim-speaking" : ""}`}>
       <div className="sidebar">
         <div className="sidebar-header">
-          <h2>✨ Historique Alim</h2>
-          <p className="subtitle">Votre guide spirituel</p>
+          <h2>✨ Alim History</h2>
+          <p className="subtitle">Your spiritual guide</p>
         </div>
 
         <button onClick={startNewChat} className="new-chat-btn">
-          <span className="btn-icon">🌟</span>+ Nouvelle Conversation
+          <span className="btn-icon">🌟</span>+ New Conversation
         </button>
 
         <div className="session-list">
@@ -129,23 +158,29 @@ function App() {
             sessionList.map((session) => (
               <div
                 key={session.session_id}
-                className={`session-item ${session.session_id === currentSessionId ? "active" : ""}`}
+                className={`session-item ${
+                  session.session_id === currentSessionId ? "active" : ""
+                }`}
                 onClick={() => loadSessionMessages(session.session_id)}
               >
                 <div className="session-icon">🕌</div>
                 <div className="session-content">
-                  <h4>{session.timestamp || "Nouvelle session"}</h4>
-                  <p>{session.last_message_preview || "Aucun message encore..."}</p>
+                  <h4>{session.timestamp || "New session"}</h4>
+                  <p>
+                    {session.last_message_preview || "No messages yet..."}
+                  </p>
                 </div>
               </div>
             ))
           ) : (
-            <p className="no-sessions">Aucune conversation trouvée.</p>
+            <p className="no-sessions">No conversations found.</p>
           )}
         </div>
 
         <div className="sidebar-footer">
-          <div className="spiritual-quote">"Et c'est dans le rappel d'Allah que les cœurs trouvent leur sérénité"</div>
+          <div className="spiritual-quote">
+            "Verily, in the remembrance of Allah do hearts find rest"
+          </div>
         </div>
       </div>
 
@@ -153,13 +188,20 @@ function App() {
         <header className="chat-header">
           <div className="header-glow"></div>
           <h1>🌙 Alim Chat Paradise</h1>
-          <p>Discutez avec Alim, votre assistant islamique personnel dans un espace de sérénité</p>
+          <p>
+            Chat with Alim, your personal Islamic assistant in a space of
+            serenity
+          </p>
         </header>
         <ChatWindow messages={messages} isLoading={isLoading} />
-        <ChatInput onSendMessage={handleSendMessage} isLoading={isLoading} />
+        <ChatInput
+          onSendMessage={handleSendMessage}
+          onVoiceSubmit={(transcription) => handleSendMessage(transcription, true)}
+          isLoading={isLoading}
+        />
       </div>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
