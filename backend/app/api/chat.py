@@ -20,9 +20,9 @@ async def chat_message(request: ChatRequest):
 @router.get("/sessions", response_model=List[SessionInfo])
 async def list_sessions():
     sessions = []
-    # Assurez-vous que MEMORY_DIR est bien défini et existe
+    # Ensure MEMORY_DIR is defined and exists
     if not os.path.exists(MEMORY_DIR):
-        return [] # Retourne une liste vide si le dossier de mémoire n'existe pas
+        return [] # Return an empty list if the memory directory doesn't exist
 
     for filename in os.listdir(MEMORY_DIR):
         if filename.endswith(".json"):
@@ -36,9 +36,9 @@ async def list_sessions():
                 with open(file_path, 'r', encoding='utf-8') as f:
                     messages_data = json.load(f)
                     if messages_data:
-                        # Assurez-vous que le message est un dictionnaire avec 'content'
+                        # Ensure the message is a dictionary with 'content'
                         last_message = messages_data[-1]
-                        # Vérifie si 'content' existe avant de l'accéder
+                        # Check if 'content' exists before accessing it
                         if 'content' in last_message:
                             preview_text = last_message.get('content', '')
                             last_message_preview = preview_text[:50] + '...' if len(preview_text) > 50 else preview_text
@@ -48,9 +48,9 @@ async def list_sessions():
                     timestamp = datetime.datetime.fromtimestamp(timestamp).strftime("%Y-%m-%d %H:%M")
 
             except json.JSONDecodeError:
-                print(f"Erreur: Le fichier JSON {filename} est corrompu ou vide.")
+                print(f"Error: JSON file {filename} is corrupted or empty.")
             except Exception as e:
-                print(f"Erreur lors de la lecture du fichier de session {filename}: {e}")
+                print(f"Error reading session file {filename}: {e}")
 
             sessions.append(SessionInfo(
                 session_id=session_id,
@@ -62,7 +62,7 @@ async def list_sessions():
 
     return sessions
 
-@router.get("/sessions/{session_id}", response_model=List[dict]) # Change ici pour List[dict] car ChatRequest n'est pas ce que tu renvoies
+@router.get("/sessions/{session_id}", response_model=List[dict]) # Changed here to List[dict] because ChatRequest is not what you are returning
 async def get_session_messages(session_id: str):
     messages = get_session_history(session_id)
     serializable_messages = []

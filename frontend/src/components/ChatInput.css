@@ -160,3 +160,43 @@
 .send-button:hover:not(:disabled)::before {
   left: 100%;
 }
+
+.mic-button {
+  background: var(--paradise-light);
+  border: none;
+  color: var(--paradise-divine);
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 50%;
+  width: 52px;
+  height: 52px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: var(--shadow-soft);
+}
+
+.mic-button:hover {
+  background: var(--paradise-bright);
+  box-shadow: var(--shadow-divine);
+}
+
+.mic-button.recording {
+  background: red;
+  color: white;
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+

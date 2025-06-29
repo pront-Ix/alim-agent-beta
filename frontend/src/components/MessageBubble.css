@@ -37,7 +37,7 @@
   align-self: flex-end;
   margin-left: auto;
   border-bottom-right-radius: 6px;
-  padding-right: 40px; /* Espace pour l'icône */
+  padding-right: 40px; /* space for the icon */
   position: relative;
 }
 
@@ -62,7 +62,7 @@
   margin-right: auto;
   border-bottom-left-radius: 6px;
   border: 1px solid var(--paradise-medium);
-  padding-left: 40px; /* Espace pour l'icône */
+  padding-left: 40px; /* space for the icon */
   position: relative;
 }
 

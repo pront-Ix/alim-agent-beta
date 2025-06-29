@@ -1,9 +1,9 @@
 # Alim: AI-Powered Islamic Knowledge Assistant
 
-![Alim App Screenshot](images/Screenshot1.png)
-![Alim App Screenshot](images/Screenshot2.png)
-![Alim App Screenshot](images/Screenshot3.png)
-
+![Alim App Screenshot](images/alim1.png)
+![Alim App Screenshot](images/alim2.png)
+![Alim App Screenshot](images/alim3.png)
+![Alim App Screenshot](images/alim4.png)
 ## Project Description
 
 Alim is an innovative AI-powered application designed to provide accessible and accurate Islamic knowledge. Built for the world wide muslims, this project aims to enhance how Muslims engage with faith and learning by leveraging artificial intelligence to deliver comprehensive and contextually relevant information. It serves as a smart, accessible, and future-proof learning tool, making complex religious information understandable and readily available.
@@ -13,8 +13,9 @@ Alim is an innovative AI-powered application designed to provide accessible and 
 *   **Intelligent AI Agent:** Powered by LangChain, the AI agent processes user queries and retrieves relevant information.
 *   **Comprehensive Knowledge Base:** Utilizes a FAISS vector store populated with extensive Islamic knowledge.
 *   **Interactive Chat Interface:** A user-friendly React frontend allows for seamless conversation with the AI.
+*   **Voice Input & Output:** Seamlessly interact with Alim using your voice, and hear responses spoken aloud. (Note: Voice features are currently best supported on Google Chrome and have not been extensively tested on other browsers yet. In shaa Allah, broader browser compatibility will be addressed in future updates.)
 *   **Contextual Responses:** Provides accurate and contextually appropriate answers to a wide range of Islamic questions.
-*   **Conversation Memory:** Stores past conversations to maintain context across interactions (though this might need further implementation details if not fully persistent).
+*   **Conversation Memory:** Stores past conversations to maintain context across interactions.
 
 ## Technologies Used
 
@@ -23,15 +24,16 @@ Alim is an innovative AI-powered application designed to provide accessible and 
 *   **FastAPI:** A modern, fast (high-performance) web framework for building APIs with Python 3.7+.
 *   **LangChain:** A framework for developing applications powered by language models.
 *   **FAISS:** A library for efficient similarity search and clustering of dense vectors, used here for the vector store.
-*   **OpenAI:** Used for language model capabilities (via `langchain-openai`).
+*   **OpenAI:** Used for language model capabilities (via `langchain-openai`) and text-to-speech (TTS) for voice output.
 *   **Python-dotenv:** For managing environment variables.
 *   **Uvicorn:** An ASGI web server for running the FastAPI application.
-*   **Other dependencies:** `numpy`, `tiktoken`, `requests`, etc. (as listed in `requirements.txt`).
+*   **Other dependencies:** `numpy`, `tiktoken`, `requests`, `pypdf`, etc. (as listed in `requirements.txt`).
 
 ### Frontend (React)
 
 *   **React:** A JavaScript library for building user interfaces.
 *   **Vite:** A fast build tool that provides a lightning-fast development experience.
+*   **Web Speech API:** For handling speech-to-text (STT) for voice input.
 *   **CSS:** For styling the application components.
 
 ## Setup and Installation
@@ -168,7 +170,7 @@ Contributions are welcome! Please feel free to fork the repository, create a new
 
 ## License
 
-[Specify your license here, e.g., MIT License]
+MIT License
 
 ## Contribution Guide for Muslim Developers
 

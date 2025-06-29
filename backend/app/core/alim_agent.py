@@ -2,24 +2,24 @@ import os
 import json
 from typing import List, TypedDict
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
-# from langchain_community.document_loaders import WebBaseLoader # Plus nécessaire si on charge de FAISS
-from langchain_text_splitters import RecursiveCharacterTextSplitter # Encore utile si tu veux re-indexer manuellement
+# from langchain_community.document_loaders import WebBaseLoader # No longer needed if loading from FAISS
+from langchain_text_splitters import RecursiveCharacterTextSplitter # Still useful if you want to re-index manually
 from langchain_community.vectorstores import FAISS
 from langchain import hub
-from langchain_core.documents import Document # Encore utile pour les types
+from langchain_core.documents import Document 
 from langgraph.graph import StateGraph, START
 from langchain_core.messages import BaseMessage, HumanMessage, AIMessage
 from langchain_core.runnables import RunnablePassthrough
 from operator import itemgetter
 
-# Charger les variables d'environnement
+# Load environment variables
 from dotenv import load_dotenv
 load_dotenv()
 
-# Configuration des clés API
+# Configure API keys
 os.environ["USER_AGENT"]
 
-# --- Gestion de la mémoire ---
+# --- Memory Management ---
 MEMORY_DIR = "conversation_memories"
 os.makedirs(MEMORY_DIR, exist_ok=True)
 
@@ -45,25 +45,25 @@ def save_session_history(session_id: str, messages: List[BaseMessage]):
     with open(file_path, 'w', encoding='utf-8') as f:
         json.dump(messages_data, f, ensure_ascii=False, indent=4)
 
-# --- LangChain setup - Chargement du Vector Store ---
-FAISS_INDEX_PATH = "faiss_index" # Doit correspondre au chemin de sauvegarde
+# --- LangChain setup - Vector Store Loading ---
+FAISS_INDEX_PATH = "faiss_index" # Must match the save path
 
 embeddings = OpenAIEmbeddings(model="text-embedding-3-large")
 
-vector_store = None # Initialiser à None
+vector_store = None # Initialize to None
 if os.path.exists(FAISS_INDEX_PATH):
     try:
-        print(f"Chargement du vector store depuis : {FAISS_INDEX_PATH}")
+        print(f"Loading vector store from: {FAISS_INDEX_PATH}")
         vector_store = FAISS.load_local(FAISS_INDEX_PATH, embeddings, allow_dangerous_deserialization=True)
-        print("Vector store chargé avec succès.")
+        print("Vector store loaded successfully.")
     except Exception as e:
-        print(f"Erreur lors du chargement du vector store FAISS : {e}")
-        print("Veuillez reconstruire le vector store en exécutant 'python build_vector_store.py'")
-        # Fallback (optionnel): si échec de chargement, tu peux choisir de le reconstruire
-        # ou laisser Alim sans base de connaissances externes.
-        # Pour l'instant, on le laisse à None pour que retrieve() gère l'absence.
+        print(f"Error loading FAISS vector store: {e}")
+        print("Please rebuild the vector store by running 'python build_vector_store.py'")
+        # Fallback (optional): if loading fails, you can choose to rebuild it
+        # or let Alim run without an external knowledge base.
+        # For now, we leave it as None so that retrieve() handles its absence.
 else:
-    print(f"Le dossier '{FAISS_INDEX_PATH}' n'existe pas. Veuillez exécuter 'python build_vector_store.py' pour construire le vector store.")
+    print(f"The '{FAISS_INDEX_PATH}' directory does not exist. Please run 'python build_vector_store.py' to build the vector store.")
 
 Ilm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
 
@@ -76,11 +76,10 @@ class State(TypedDict):
 
 prompt = hub.pull("rlm/rag-prompt")
 
-# Cell 6: Define application steps
 def retrieve(state: State):
     print(f"Retrieving for question: {state['question']}")
     if vector_store is None:
-        print("Vector store non disponible, pas de récupération de contexte.")
+        print("Vector store not available, no context retrieval.")
         return {"context": []}
     retrieved_docs = vector_store.similarity_search(state["question"])
     print(f"Retrieved {len(retrieved_docs)} documents.")
@@ -90,7 +89,7 @@ def generate(state: State):
     print(f"Generating answer for question: {state['question']}")
     docs_content = "\n\n".join(doc.page_content for doc in state["context"])
 
-    # Instruction générale pour le LLM
+    # General instruction for the LLM
     system_instruction = f"""
     Your name is Alim. You are a friendly, helpful, and good Muslim servant. Your role is to provide clear, precise, and authentic answers regarding Islamic knowledge.
     You are an expert assistant in Islam, and you must strictly rely on the knowledge sources we provide.
@@ -138,7 +137,7 @@ def generate(state: State):
     Your answer based on the instructions above :
     """
 
-    messages = [HumanMessage(content=system_instruction)] # Nous injectons toutes les instructions ici.
+    messages = [HumanMessage(content=system_instruction)] # We inject all instructions here.
 
     response = Ilm.invoke(messages)
     print(f"Generated answer: {response.content[:50]}...")
@@ -149,7 +148,7 @@ def human_readable_chat_history(chat_history: List[BaseMessage]) -> str:
     formatted_history = []
     for msg in chat_history:
         if isinstance(msg, HumanMessage):
-            formatted_history.append(f"Utilisateur: {msg.content}")
+            formatted_history.append(f"User: {msg.content}")
         elif isinstance(msg, AIMessage):
             formatted_history.append(f"Alim: {msg.content}")
     return "\n".join(formatted_history)
@@ -166,10 +165,10 @@ app_graph = graph_builder.compile()
 
 async def get_alim_response(user_message: str, session_id: str) -> str:
     if not session_id:
-        raise ValueError("session_id doit être fourni pour gérer l'historique.")
+        raise ValueError("session_id must be provided to manage history.")
 
     chat_history = get_session_history(session_id)
-    # print(f"Loaded history for session {session_id}: {chat_history}") # Décommenter pour debug
+    # print(f"Loaded history for session {session_id}: {chat_history}") # Uncomment for debugging
 
     inputs = {
         "question": user_message,
@@ -180,16 +179,16 @@ async def get_alim_response(user_message: str, session_id: str) -> str:
 
     try:
         result = app_graph.invoke(inputs)
-        alim_answer = result.get("answer", "Désolé, je n'ai pas pu générer de réponse.")
+        alim_answer = result.get("answer", "Sorry, I could not generate a response.")
 
         chat_history.append(HumanMessage(content=user_message))
         chat_history.append(AIMessage(content=alim_answer))
         save_session_history(session_id, chat_history)
-        # print(f"Saved history for session {session_id}.") # Décommenter pour debug
+        # print(f"Saved history for session {session_id}.") # Uncomment for debugging
 
         return alim_answer
     except Exception as e:
-        print(f"Erreur lors de l'invocation de l'agent Alim : {e}")
+        print(f"Error during Alim agent invocation: {e}")
         chat_history.append(HumanMessage(content=user_message))
         # We don't include Alim's response if it failed.
         save_session_history(session_id, chat_history)

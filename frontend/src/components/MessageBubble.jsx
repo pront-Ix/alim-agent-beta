@@ -1,13 +1,13 @@
 import "./MessageBubble.css"
 
-// Fonction pour parser le Markdown de base
+// Function to parse basic Markdown
 const parseMarkdown = (text) => {
   if (!text) return text
 
-  // Diviser le texte en lignes pour traiter les listes
+  // Split the text into lines to process lists
   const lines = text.split("\n")
   const parsedLines = lines.map((line, index) => {
-    // Traiter les listes numérotées
+    // Process numbered lists
     const listMatch = line.match(/^(\d+)\.\s\*\*(.*?)\*\*\s*:\s*(.*)$/)
     if (listMatch) {
       const [, number, title, description] = listMatch
@@ -21,7 +21,7 @@ const parseMarkdown = (text) => {
       )
     }
 
-    // Traiter les listes avec tirets
+    // Process dashed lists
     const dashListMatch = line.match(/^-\s\*\*(.*?)\*\*\s*:\s*(.*)$/)
     if (dashListMatch) {
       const [, title, description] = dashListMatch
@@ -35,28 +35,28 @@ const parseMarkdown = (text) => {
       )
     }
 
-    // Traiter le texte normal avec formatage
+    // Process normal text with formatting
     const processInlineFormatting = (text) => {
       const parts = []
       let currentIndex = 0
 
-      // Regex pour trouver le texte en gras **texte**
+      // Regex to find bold text **text**
       const boldRegex = /\*\*(.*?)\*\*/g
       let match
 
       while ((match = boldRegex.exec(text)) !== null) {
-        // Ajouter le texte avant le gras
+        // Add the text before the bold text
         if (match.index > currentIndex) {
           parts.push(text.slice(currentIndex, match.index))
         }
 
-        // Ajouter le texte en gras
+        // Add the bold text
         parts.push(<strong key={`bold-${match.index}`}>{match[1]}</strong>)
 
         currentIndex = match.index + match[0].length
       }
 
-      // Ajouter le reste du texte
+      // Add the rest of the text
       if (currentIndex < text.length) {
         parts.push(text.slice(currentIndex))
       }
@@ -64,7 +64,7 @@ const parseMarkdown = (text) => {
       return parts.length > 0 ? parts : text
     }
 
-    // Si la ligne n'est pas vide, traiter le formatage inline
+    // If the line is not empty, process inline formatting
     if (line.trim()) {
       return (
         <div key={index} className="text-line">
