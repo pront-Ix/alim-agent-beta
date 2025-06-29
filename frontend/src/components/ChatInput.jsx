@@ -1,5 +1,8 @@
 import { useState, useRef } from "react";
 import { transcribeAudio } from "../api";
+import MicrophoneIcon from "./icons/MicrophoneIcon";
+import StopIcon from "./icons/StopIcon";
+import SendIcon from "./icons/SendIcon";
 import "./ChatInput.css";
 
 const ChatInput = ({ onSendMessage, isLoading, onVoiceSubmit }) => {
@@ -85,7 +88,7 @@ const ChatInput = ({ onSendMessage, isLoading, onVoiceSubmit }) => {
           onClick={handleToggleRecording}
           className={`mic-button ${isRecording ? "recording" : ""}`}
         >
-          <span className="mic-icon">{isRecording ? "🛑" : "🎤"}</span>
+          {isRecording ? <StopIcon /> : <MicrophoneIcon />}
         </button>
 
         <button type="submit" disabled={isLoading || !message.trim()} className="send-button">
@@ -97,7 +100,7 @@ const ChatInput = ({ onSendMessage, isLoading, onVoiceSubmit }) => {
               </>
             ) : (
               <>
-                <span className="send-icon"></span>
+                <SendIcon />
                 Send
               </>
             )}

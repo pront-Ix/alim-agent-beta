@@ -162,20 +162,29 @@
 }
 
 .mic-button {
-  background: none;
+  background: var(--paradise-light);
   border: none;
-  color: var(--paradise-glow);
+  color: var(--paradise-divine);
   font-size: 1.5rem;
   cursor: pointer;
-  transition: color 0.3s ease;
+  transition: all 0.3s ease;
+  border-radius: 50%;
+  width: 52px;
+  height: 52px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: var(--shadow-soft);
 }
 
 .mic-button:hover {
-  color: var(--paradise-bright);
+  background: var(--paradise-bright);
+  box-shadow: var(--shadow-divine);
 }
 
 .mic-button.recording {
-  color: red;
+  background: red;
+  color: white;
   animation: pulse 1s infinite;
 }
 

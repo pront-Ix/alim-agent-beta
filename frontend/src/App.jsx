@@ -7,6 +7,8 @@ import {
   fetchSessionMessages,
   synthesizeSpeech,
 } from "./api";
+import NewConversationIcon from "./components/icons/NewConversationIcon.jsx";
+import MosqueIcon from "./components/icons/MosqueIcon.jsx";
 import "./App.css";
 
 function App() {
@@ -150,7 +152,8 @@ function App() {
         </div>
 
         <button onClick={startNewChat} className="new-chat-btn">
-          <span className="btn-icon">🌟</span>+ New Conversation
+          <NewConversationIcon />
+          New Conversation
         </button>
 
         <div className="session-list">
@@ -163,7 +166,9 @@ function App() {
                 }`}
                 onClick={() => loadSessionMessages(session.session_id)}
               >
-                <div className="session-icon">🕌</div>
+                <div className="session-icon">
+                  <MosqueIcon />
+                </div>
                 <div className="session-content">
                   <h4>{session.timestamp || "New session"}</h4>
                   <p>
