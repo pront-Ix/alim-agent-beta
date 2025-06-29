@@ -13,7 +13,7 @@ Alim is an innovative AI-powered application designed to provide accessible and 
 *   **Intelligent AI Agent:** Powered by LangChain, the AI agent processes user queries and retrieves relevant information.
 *   **Comprehensive Knowledge Base:** Utilizes a FAISS vector store populated with extensive Islamic knowledge.
 *   **Interactive Chat Interface:** A user-friendly React frontend allows for seamless conversation with the AI.
-*   **Voice Input & Output:** Seamlessly interact with Alim using your voice, and hear responses spoken aloud.
+*   **Voice Input & Output:** Seamlessly interact with Alim using your voice, and hear responses spoken aloud. (Note: Voice features are currently best supported on Google Chrome and have not been extensively tested on other browsers yet. In shaa Allah, broader browser compatibility will be addressed in future updates.)
 *   **Contextual Responses:** Provides accurate and contextually appropriate answers to a wide range of Islamic questions.
 *   **Conversation Memory:** Stores past conversations to maintain context across interactions.
 
