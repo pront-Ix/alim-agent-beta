@@ -41,11 +41,13 @@
   max-width: 1200px;
   margin: 0 auto;
   position: relative;
+  width: 100%;
 }
 
 .input-wrapper {
   flex: 1;
   position: relative;
+  min-width: 0;
 }
 
 .message-input {
@@ -135,6 +137,8 @@
   min-height: 60px;
   border: 2px solid transparent;
   font-family: var(--font-primary);
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 .send-button:hover:not(:disabled) {
@@ -250,6 +254,7 @@
   box-shadow: var(--shadow-soft);
   position: relative;
   overflow: hidden;
+  flex-shrink: 0;
 }
 
 .mic-button::before {
@@ -336,7 +341,8 @@
   }
   
   .chat-input-form {
-    gap: 12px;
+    gap: 10px;
+    align-items: center;
   }
   
   .message-input {
@@ -344,10 +350,11 @@
     font-size: 1rem;
     min-height: 50px;
     border-radius: 25px;
+    max-height: 120px;
   }
   
   .send-button {
-    padding: 16px 20px;
+    padding: 16px 18px;
     min-height: 50px;
     font-size: 1rem;
     border-radius: 25px;
@@ -370,23 +377,54 @@
   }
   
   .chat-input-form {
-    gap: 10px;
+    gap: 8px;
+    align-items: center;
   }
   
   .message-input {
     padding: 14px 18px;
     font-size: 0.95rem;
+    min-height: 45px;
+    max-height: 100px;
   }
   
   .send-button {
-    padding: 14px 18px;
+    padding: 14px 16px;
     font-size: 0.95rem;
+    min-height: 45px;
   }
   
   .mic-button {
     width: 45px;
     height: 45px;
     font-size: 1.2rem;
+  }
+
+  .button-content {
+    gap: 6px;
+  }
+}
+
+/* Extra small screens */
+@media (max-width: 360px) {
+  .chat-input-form {
+    gap: 6px;
+  }
+  
+  .send-button {
+    padding: 12px 14px;
+    font-size: 0.9rem;
+  }
+  
+  .mic-button {
+    width: 42px;
+    height: 42px;
+    font-size: 1.1rem;
+  }
+  
+  .message-input {
+    padding: 12px 16px;
+    font-size: 0.9rem;
   }
 }
 
