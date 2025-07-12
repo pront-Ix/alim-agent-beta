@@ -246,6 +246,43 @@
   }
 }
 
+@media (max-width: 480px) {
+  .message-bubble {
+    max-width: 95%;
+    padding: 14px 18px;
+    margin-bottom: 12px;
+    font-size: 0.95rem;
+  }
+  
+  .message-bubble.user {
+    padding-right: 40px;
+  }
+  
+  .message-bubble.alim {
+    padding-left: 40px;
+  }
+  
+  .chat-window {
+    padding: 8px;
+  }
+  
+  .empty-chat-state {
+    padding: 30px 20px;
+  }
+  
+  .empty-chat-state .icon {
+    font-size: 3rem;
+  }
+  
+  .empty-chat-state h3 {
+    font-size: 1.3rem;
+  }
+  
+  .empty-chat-state p {
+    font-size: 0.9rem;
+  }
+}
+
 /* High contrast mode adjustments */
 @media (prefers-contrast: high) {
   .message-bubble.user {

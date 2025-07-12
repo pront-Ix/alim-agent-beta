@@ -131,7 +131,7 @@
 }
 
 .message-bubble.alim::after {
-  content: "🌙";
+  content: "✨";
   position: absolute;
   left: 18px;
   bottom: 15px;

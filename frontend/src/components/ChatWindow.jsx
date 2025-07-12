@@ -16,7 +16,7 @@ const ChatWindow = ({ messages, isLoading }) => {
 
   const EmptyState = () => (
     <div className="empty-chat-state">
-      <div className="icon">🌙</div>
+      <div className="icon">✨</div>
       <h3>Welcome to Alim Paradise</h3>
       <p>
         Ask me anything about Islam, and I'll provide you with authentic knowledge 

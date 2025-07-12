@@ -14,7 +14,7 @@ const LoadingStatus = ({ text = "Alim is reflecting", type = "default" }) => {
   return (
     <div className="loading-status">
       <div className={`status-bubble ${type}`}>
-        <div className="alim-icon">🌙</div>
+        <div className="alim-icon">✨</div>
         <div className="loading-content">
           <span className="loading-text">{getLoadingText()}</span>
           <div className="loading-dots">

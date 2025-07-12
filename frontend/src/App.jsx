@@ -18,6 +18,7 @@ function App() {
   const [currentSessionId, setCurrentSessionId] = useState(null);
   const [sessionList, setSessionList] = useState([]);
   const [isSessionsLoading, setIsSessionsLoading] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   // Fetch sessions on application load
   useEffect(() => {
@@ -154,6 +155,14 @@ function App() {
     console.log("Started new chat with ID:", newSessionId);
   };
 
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
+  const closeSidebar = () => {
+    setIsSidebarOpen(false);
+  };
+
   const formatSessionTime = (timestamp) => {
     if (!timestamp) return "New session";
     
@@ -172,7 +181,13 @@ function App() {
 
   return (
     <div className={`App ${isAlimSpeaking ? "alim-speaking" : ""}`}>
-      <div className="sidebar">
+      <button className="mobile-menu-toggle" onClick={toggleSidebar}>
+        ☰
+      </button>
+      
+      <div className={`mobile-overlay ${isSidebarOpen ? 'show' : ''}`} onClick={closeSidebar}></div>
+      
+      <div className={`sidebar ${isSidebarOpen ? 'show' : ''}`}>
         <div className="sidebar-header">
           <h2>✨ Alim History</h2>
           <p className="subtitle">Your spiritual companion</p>
@@ -193,7 +208,10 @@ function App() {
                 className={`session-item ${
                   session.session_id === currentSessionId ? "active" : ""
                 }`}
-                onClick={() => loadSessionMessages(session.session_id)}
+                onClick={() => {
+                  loadSessionMessages(session.session_id);
+                  closeSidebar();
+                }}
               >
                 <div className="session-icon">
                   <MosqueIcon />
@@ -223,7 +241,7 @@ function App() {
       <div className="main-content">
         <header className="chat-header">
           <div className="header-glow"></div>
-          <h1>🌙 Alim Chat Paradise</h1>
+          <h1>✨ Alim Chat Paradise</h1>
           <p>
             Your trusted Islamic knowledge companion in a space of divine serenity
           </p>

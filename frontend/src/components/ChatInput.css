@@ -331,7 +331,7 @@
 @media (max-width: 768px) {
   .chat-input-container {
     padding: 20px 15px;
-    margin: 15px;
+    margin: 0;
     border-radius: 15px;
   }
   
@@ -361,6 +361,32 @@
   
   .button-content {
     gap: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .chat-input-container {
+    padding: 15px 10px;
+  }
+  
+  .chat-input-form {
+    gap: 10px;
+  }
+  
+  .message-input {
+    padding: 14px 18px;
+    font-size: 0.95rem;
+  }
+  
+  .send-button {
+    padding: 14px 18px;
+    font-size: 0.95rem;
+  }
+  
+  .mic-button {
+    width: 45px;
+    height: 45px;
+    font-size: 1.2rem;
   }
 }
 
