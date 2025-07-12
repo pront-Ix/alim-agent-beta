@@ -1,19 +1,46 @@
+/* Enhanced Chat Input Styles */
 .chat-input-container {
-  padding: 20px;
-  border-top: 1px solid var(--paradise-medium);
-  background: linear-gradient(135deg, rgba(26, 61, 46, 0.8) 0%, rgba(10, 31, 15, 0.8) 100%);
-  backdrop-filter: blur(10px);
-  border-radius: 15px;
+  padding: 25px;
+  border-top: 2px solid var(--paradise-medium);
+  background: linear-gradient(135deg, 
+    rgba(26, 61, 46, 0.95) 0%, 
+    rgba(10, 31, 15, 0.95) 100%);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
   margin-top: 20px;
   flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.chat-input-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, 
+    transparent, 
+    var(--paradise-glow), 
+    var(--gold-divine), 
+    var(--paradise-glow), 
+    transparent);
+  animation: shimmer-input 3s ease-in-out infinite;
+}
+
+@keyframes shimmer-input {
+  0%, 100% { opacity: 0.5; transform: translateX(-100%); }
+  50% { opacity: 1; transform: translateX(100%); }
 }
 
 .chat-input-form {
   display: flex;
   align-items: flex-end;
-  gap: 15px;
-  max-width: 1000px;
+  gap: 18px;
+  max-width: 1200px;
   margin: 0 auto;
+  position: relative;
 }
 
 .input-wrapper {
@@ -23,98 +50,136 @@
 
 .message-input {
   width: 100%;
-  padding: 16px 20px;
+  padding: 20px 24px;
   border: 2px solid var(--paradise-medium);
-  border-radius: 25px;
-  font-size: 1rem;
-  font-family: inherit;
-  line-height: 1.4;
+  border-radius: 30px;
+  font-size: 1.1rem;
+  font-family: var(--font-primary);
+  line-height: 1.5;
   resize: none;
-  min-height: 52px;
-  max-height: 150px;
+  min-height: 60px;
+  max-height: 180px;
   overflow-y: auto;
-  background: linear-gradient(135deg, rgba(45, 90, 71, 0.3) 0%, rgba(26, 61, 46, 0.3) 100%);
+  background: linear-gradient(135deg, 
+    rgba(45, 90, 71, 0.4) 0%, 
+    rgba(26, 61, 46, 0.4) 100%);
   color: var(--paradise-ethereal);
-  backdrop-filter: blur(10px);
-  transition: all 0.3s ease;
+  backdrop-filter: blur(15px);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   outline: none;
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.1);
+  font-weight: 400;
 }
 
 .message-input::placeholder {
   color: var(--paradise-glow);
-  opacity: 0.7;
+  opacity: 0.8;
+  font-style: italic;
+  font-weight: 300;
 }
 
 .message-input:focus {
   border-color: var(--paradise-bright);
-  box-shadow: 0 0 20px rgba(106, 184, 138, 0.3);
-  background: linear-gradient(135deg, rgba(45, 90, 71, 0.4) 0%, rgba(26, 61, 46, 0.4) 100%);
+  box-shadow: 
+    0 0 30px rgba(106, 184, 138, 0.4),
+    inset 0 2px 8px rgba(0, 0, 0, 0.1);
+  background: linear-gradient(135deg, 
+    rgba(45, 90, 71, 0.5) 0%, 
+    rgba(26, 61, 46, 0.5) 100%);
+  transform: scale(1.01);
 }
 
 .input-glow {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  border-radius: 25px;
-  background: var(--glow-soft);
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  border-radius: 32px;
+  background: linear-gradient(45deg, 
+    var(--paradise-bright), 
+    var(--paradise-glow), 
+    var(--gold-divine), 
+    var(--paradise-bright));
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.4s ease;
   pointer-events: none;
+  z-index: -1;
+  animation: rotate-glow 4s linear infinite;
+}
+
+@keyframes rotate-glow {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 .message-input:focus + .input-glow {
-  opacity: 0.2;
+  opacity: 0.3;
 }
 
 .send-button {
   position: relative;
-  padding: 16px 24px;
+  padding: 20px 28px;
   border: none;
-  border-radius: 25px;
-  font-size: 1rem;
-  font-weight: 500;
+  border-radius: 30px;
+  font-size: 1.1rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
-  background: linear-gradient(135deg, var(--paradise-bright) 0%, var(--paradise-light) 100%);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  background: linear-gradient(135deg, 
+    var(--paradise-bright) 0%, 
+    var(--paradise-light) 100%);
   color: var(--paradise-divine);
   box-shadow: var(--shadow-soft);
   overflow: hidden;
-  min-height: 52px;
+  min-height: 60px;
+  border: 2px solid transparent;
+  font-family: var(--font-primary);
 }
 
 .send-button:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-divine);
-  background: linear-gradient(135deg, var(--paradise-glow) 0%, var(--paradise-bright) 100%);
+  transform: translateY(-4px) scale(1.05);
+  box-shadow: var(--shadow-elevated);
+  background: linear-gradient(135deg, 
+    var(--paradise-glow) 0%, 
+    var(--paradise-bright) 100%);
+  border-color: var(--gold-divine);
 }
 
 .send-button:active:not(:disabled) {
-  transform: translateY(0);
+  transform: translateY(-2px) scale(1.02);
 }
 
 .send-button:disabled {
-  opacity: 0.5;
+  opacity: 0.6;
   cursor: not-allowed;
   transform: none;
+  background: linear-gradient(135deg, 
+    rgba(106, 184, 138, 0.5) 0%, 
+    rgba(74, 139, 107, 0.5) 100%);
 }
 
 .button-content {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   position: relative;
   z-index: 2;
+  font-weight: 600;
 }
 
 .send-icon {
-  font-size: 1.1rem;
+  font-size: 1.2rem;
+  transition: transform 0.3s ease;
+}
+
+.send-button:hover:not(:disabled) .send-icon {
+  transform: translateX(3px);
 }
 
 .loading-spinner {
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
   border: 2px solid transparent;
   border-top: 2px solid currentColor;
   border-radius: 50%;
@@ -122,29 +187,32 @@
 }
 
 @keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
+  to { transform: rotate(360deg); }
 }
 
 .button-glow {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  border-radius: 25px;
-  background: var(--glow-soft);
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  border-radius: 32px;
+  background: linear-gradient(45deg, 
+    var(--paradise-glow), 
+    var(--gold-divine), 
+    var(--paradise-glow));
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.4s ease;
   pointer-events: none;
+  z-index: 1;
+  animation: rotate-glow 3s linear infinite;
 }
 
 .send-button:hover:not(:disabled) .button-glow {
-  opacity: 0.3;
+  opacity: 0.4;
 }
 
-/* Animation de brillance sur le bouton */
+/* Enhanced shine effect */
 .send-button::before {
   content: "";
   position: absolute;
@@ -152,8 +220,11 @@
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-  transition: left 0.5s ease;
+  background: linear-gradient(90deg, 
+    transparent, 
+    rgba(255, 255, 255, 0.4), 
+    transparent);
+  transition: left 0.6s ease;
   z-index: 1;
 }
 
@@ -162,41 +233,167 @@
 }
 
 .mic-button {
-  background: var(--paradise-light);
-  border: none;
+  background: linear-gradient(135deg, 
+    var(--paradise-light) 0%, 
+    var(--paradise-medium) 100%);
+  border: 2px solid var(--paradise-medium);
   color: var(--paradise-divine);
-  font-size: 1.5rem;
+  font-size: 1.6rem;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   border-radius: 50%;
-  width: 52px;
-  height: 52px;
+  width: 60px;
+  height: 60px;
   display: flex;
   justify-content: center;
   align-items: center;
   box-shadow: var(--shadow-soft);
+  position: relative;
+  overflow: hidden;
+}
+
+.mic-button::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  transition: all 0.4s ease;
+  transform: translate(-50%, -50%);
+}
+
+.mic-button:hover::before {
+  width: 100%;
+  height: 100%;
 }
 
 .mic-button:hover {
-  background: var(--paradise-bright);
-  box-shadow: var(--shadow-divine);
+  background: linear-gradient(135deg, 
+    var(--paradise-bright) 0%, 
+    var(--paradise-light) 100%);
+  box-shadow: var(--shadow-elevated);
+  transform: scale(1.1);
+  border-color: var(--paradise-bright);
 }
 
 .mic-button.recording {
-  background: red;
+  background: linear-gradient(135deg, #ff4757 0%, #ff3742 100%);
   color: white;
-  animation: pulse 1s infinite;
+  animation: recording-pulse 1.5s infinite;
+  border-color: #ff4757;
+  box-shadow: 0 0 30px rgba(255, 71, 87, 0.5);
 }
 
-@keyframes pulse {
-  0% {
+@keyframes recording-pulse {
+  0%, 100% {
     transform: scale(1);
+    box-shadow: 0 0 30px rgba(255, 71, 87, 0.5);
   }
   50% {
-    transform: scale(1.1);
-  }
-  100% {
-    transform: scale(1);
+    transform: scale(1.15);
+    box-shadow: 0 0 40px rgba(255, 71, 87, 0.8);
   }
 }
 
+/* Enhanced input states */
+.input-wrapper.typing .message-input {
+  border-color: var(--paradise-bright);
+  box-shadow: 0 0 20px rgba(106, 184, 138, 0.3);
+}
+
+/* Voice input feedback */
+.voice-feedback {
+  position: absolute;
+  top: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(255, 71, 87, 0.9);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  opacity: 0;
+  transition: all 0.3s ease;
+  pointer-events: none;
+  backdrop-filter: blur(10px);
+}
+
+.voice-feedback.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(-10px);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .chat-input-container {
+    padding: 20px 15px;
+    margin: 15px;
+    border-radius: 15px;
+  }
+  
+  .chat-input-form {
+    gap: 12px;
+  }
+  
+  .message-input {
+    padding: 16px 20px;
+    font-size: 1rem;
+    min-height: 50px;
+    border-radius: 25px;
+  }
+  
+  .send-button {
+    padding: 16px 20px;
+    min-height: 50px;
+    font-size: 1rem;
+    border-radius: 25px;
+  }
+  
+  .mic-button {
+    width: 50px;
+    height: 50px;
+    font-size: 1.4rem;
+  }
+  
+  .button-content {
+    gap: 8px;
+  }
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  .message-input,
+  .send-button,
+  .mic-button {
+    transition: none;
+  }
+  
+  .input-glow,
+  .button-glow {
+    animation: none;
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .message-input {
+    background: var(--paradise-deep);
+    border-color: var(--paradise-ethereal);
+    color: var(--paradise-ethereal);
+  }
+  
+  .send-button {
+    background: var(--paradise-bright);
+    color: var(--paradise-deep);
+    border: 2px solid var(--paradise-deep);
+  }
+  
+  .mic-button {
+    background: var(--paradise-light);
+    border-color: var(--paradise-ethereal);
+  }
+}

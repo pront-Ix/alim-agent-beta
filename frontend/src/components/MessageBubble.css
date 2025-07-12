@@ -1,28 +1,31 @@
-/* frontend/src/components/MessageBubble.css */
+/* Enhanced Message Bubble Styles */
 .message-bubble {
-  margin-bottom: 15px;
-  padding: 18px 24px;
-  border-radius: 20px;
-  max-width: 75%;
+  margin-bottom: 20px;
+  padding: 22px 28px;
+  border-radius: 24px;
+  max-width: 78%;
   word-wrap: break-word;
   box-shadow: var(--shadow-soft);
-  font-size: 1rem;
-  line-height: 1.6;
+  font-size: 1.05rem;
+  line-height: 1.7;
   position: relative;
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  animation: slideIn 0.4s ease-out;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  backdrop-filter: blur(20px);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  animation: slideInMessage 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  font-family: var(--font-primary);
+  font-weight: 400;
+  overflow: hidden;
 }
 
-@keyframes slideIn {
+@keyframes slideInMessage {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(30px) scale(0.95);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
   }
 }
 
@@ -31,68 +34,144 @@
   z-index: 2;
 }
 
+/* Enhanced user message styling */
 .message-bubble.user {
-  background: linear-gradient(135deg, var(--paradise-bright) 0%, var(--paradise-light) 100%);
+  background: linear-gradient(135deg, 
+    var(--paradise-bright) 0%, 
+    var(--paradise-light) 50%,
+    var(--paradise-medium) 100%);
   color: var(--paradise-divine);
   align-self: flex-end;
   margin-left: auto;
-  border-bottom-right-radius: 6px;
-  padding-right: 40px; /* space for the icon */
+  border-bottom-right-radius: 8px;
+  padding-right: 55px;
   position: relative;
+  box-shadow: var(--shadow-soft), 
+              inset 0 2px 0 rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.message-bubble.user::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, 
+    transparent, 
+    rgba(255, 255, 255, 0.2), 
+    transparent);
+  transition: left 0.6s ease;
+}
+
+.message-bubble.user:hover::before {
+  left: 100%;
 }
 
 .message-bubble.user::after {
- 
+  content: "👤";
   position: absolute;
-  right: 12px;
-  bottom: 10px;
-  font-size: 1.2rem;
-  opacity: 0.8;
+  right: 18px;
+  bottom: 15px;
+  font-size: 1.4rem;
+  opacity: 0.85;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.3));
+  transition: all 0.3s ease;
 }
 
 .message-bubble.user:hover {
-  box-shadow: var(--shadow-divine);
-  transform: translateY(-2px);
+  box-shadow: var(--shadow-elevated);
+  transform: translateY(-4px) scale(1.02);
+  background: linear-gradient(135deg, 
+    var(--paradise-glow) 0%, 
+    var(--paradise-bright) 50%,
+    var(--paradise-light) 100%);
+  border-color: var(--gold-divine);
 }
 
+.message-bubble.user:hover::after {
+  transform: scale(1.1);
+  opacity: 1;
+}
+
+/* Enhanced Alim message styling */
 .message-bubble.alim {
-  background: linear-gradient(135deg, rgba(45, 90, 71, 0.8) 0%, rgba(26, 61, 46, 0.8) 100%);
+  background: linear-gradient(135deg, 
+    rgba(45, 90, 71, 0.95) 0%, 
+    rgba(26, 61, 46, 0.95) 50%,
+    rgba(10, 31, 15, 0.95) 100%);
   color: var(--paradise-ethereal);
   align-self: flex-start;
   margin-right: auto;
-  border-bottom-left-radius: 6px;
-  border: 1px solid var(--paradise-medium);
-  padding-left: 40px; /* space for the icon */
+  border-bottom-left-radius: 8px;
+  border: 2px solid var(--paradise-medium);
+  padding-left: 55px;
   position: relative;
+  box-shadow: var(--shadow-soft), 
+              inset 0 2px 0 rgba(143, 212, 168, 0.2);
+}
+
+.message-bubble.alim::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, 
+    transparent, 
+    rgba(143, 212, 168, 0.15), 
+    transparent);
+  transition: left 0.6s ease;
+}
+
+.message-bubble.alim:hover::before {
+  left: 100%;
 }
 
 .message-bubble.alim::after {
+  content: "🌙";
   position: absolute;
-  left: 12px;
-  bottom: 10px;
-  font-size: 1.2rem;
-  opacity: 0.9;
-  animation: gentleGlow 3s ease-in-out infinite;
+  left: 18px;
+  bottom: 15px;
+  font-size: 1.4rem;
+  opacity: 0.95;
+  animation: gentleGlow 4s ease-in-out infinite;
+  filter: drop-shadow(0 2px 8px rgba(143, 212, 168, 0.4));
+  transition: all 0.3s ease;
 }
 
 .message-bubble.alim:hover {
-  box-shadow: var(--shadow-divine);
-  transform: translateY(-2px);
+  box-shadow: var(--shadow-elevated);
+  transform: translateY(-4px) scale(1.02);
+  border-color: var(--paradise-bright);
+  background: linear-gradient(135deg, 
+    rgba(74, 139, 107, 0.95) 0%, 
+    rgba(45, 90, 71, 0.95) 50%,
+    rgba(26, 61, 46, 0.95) 100%);
+}
+
+.message-bubble.alim:hover::after {
+  transform: scale(1.1);
+  animation-duration: 2s;
 }
 
 @keyframes gentleGlow {
-  0%,
-  100% {
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+  0%, 100% {
+    filter: drop-shadow(0 2px 8px rgba(143, 212, 168, 0.4));
+    transform: scale(1);
   }
   50% {
-    filter: drop-shadow(0 2px 8px rgba(143, 212, 168, 0.4));
+    filter: drop-shadow(0 4px 16px rgba(143, 212, 168, 0.6));
+    transform: scale(1.05);
   }
 }
 
-/* Styles pour le formatage Markdown */
+/* Enhanced Markdown styling */
 .text-line {
-  margin-bottom: 8px;
+  margin-bottom: 10px;
+  line-height: 1.7;
 }
 
 .text-line:last-child {
@@ -102,8 +181,17 @@
 .list-item {
   display: flex;
   align-items: flex-start;
-  margin-bottom: 12px;
-  line-height: 1.5;
+  margin-bottom: 14px;
+  line-height: 1.6;
+  padding: 8px 0;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.list-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+  padding-left: 8px;
+  padding-right: 8px;
 }
 
 .list-item:last-child {
@@ -112,82 +200,215 @@
 
 .list-number,
 .list-bullet {
-  font-weight: bold;
-  margin-right: 8px;
+  font-weight: 700;
+  margin-right: 12px;
   flex-shrink: 0;
   color: var(--paradise-glow);
-  font-size: 1.1rem;
+  font-size: 1.15rem;
+  min-width: 24px;
+  text-align: center;
+  background: rgba(143, 212, 168, 0.2);
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2px;
 }
 
 .list-title {
-  font-weight: bold;
-  margin-right: 4px;
+  font-weight: 700;
+  margin-right: 6px;
   color: inherit;
+  font-size: 1.05rem;
+  letter-spacing: 0.3px;
 }
 
 .message-bubble.user .list-title {
   color: var(--paradise-divine);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 .message-bubble.alim .list-title {
   color: var(--paradise-ethereal);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .list-separator {
-  margin-right: 6px;
-  font-weight: bold;
+  margin-right: 8px;
+  font-weight: 600;
+  color: var(--paradise-glow);
 }
 
 .list-description {
   flex: 1;
-  line-height: 1.5;
+  line-height: 1.6;
+  font-weight: 400;
 }
 
-/* Styles pour le texte en gras */
+/* Enhanced bold text styling */
 strong {
-  font-weight: 600;
+  font-weight: 700;
   color: inherit;
+  letter-spacing: 0.2px;
 }
 
 .message-bubble.user strong {
   color: var(--pearl-white);
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
 .message-bubble.alim strong {
   color: var(--paradise-glow);
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
 }
 
-/* Amélioration de la lisibilité */
+/* Enhanced paragraph styling */
 .message-bubble p {
-  margin-bottom: 10px;
+  margin-bottom: 12px;
+  line-height: 1.7;
 }
 
 .message-bubble p:last-child {
   margin-bottom: 0;
 }
 
-/* --- Styles pour l'animation de dévoilement progressif --- */
-.word-reveal {
-  opacity: 0; /* Commence invisible */
-  transform: translateY(5px); /* Légèrement décalé vers le bas */
-  animation: revealWord 0.4s ease-out forwards; /* Durée de l'animation, easing, et reste en place */
-  display: inline-block; /* Permet d'appliquer la transformation et opacité à chaque mot */
+/* Code and quotes styling */
+.message-bubble code {
+  background: rgba(0, 0, 0, 0.2);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 0.9em;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* L'animation elle-même est appliquée par JavaScript avec un délai.
-   Chaque span individuel n'a pas besoin d'un délai CSS ici,
-   car leur apparition est contrôlée par le setInterval de JS. */
+.message-bubble blockquote {
+  border-left: 4px solid var(--paradise-glow);
+  padding-left: 16px;
+  margin: 12px 0;
+  font-style: italic;
+  opacity: 0.9;
+  background: rgba(143, 212, 168, 0.1);
+  padding: 12px 16px;
+  border-radius: 0 8px 8px 0;
+}
+
+/* Arabic text support */
+.arabic-text {
+  font-family: var(--font-arabic);
+  font-size: 1.2em;
+  line-height: 1.8;
+  direction: rtl;
+  text-align: right;
+  margin: 12px 0;
+  padding: 12px;
+  background: rgba(255, 215, 0, 0.1);
+  border-radius: 8px;
+  border: 1px solid var(--gold-divine);
+}
+
+/* Word reveal animation */
+.word-reveal {
+  opacity: 0;
+  transform: translateY(8px);
+  animation: revealWord 0.5s ease-out forwards;
+  display: inline-block;
+  margin-right: 4px;
+}
 
 @keyframes revealWord {
   from {
     opacity: 0;
-    transform: translateY(5px);
+    transform: translateY(8px);
   }
   to {
     opacity: 1;
     transform: translateY(0);
   }
 }
-/* --- Fin des styles pour l'animation de dévoilement progressif --- */
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .message-bubble {
+    max-width: 92%;
+    padding: 18px 22px;
+    margin-bottom: 16px;
+    font-size: 1rem;
+    border-radius: 20px;
+  }
+  
+  .message-bubble.user {
+    padding-right: 50px;
+  }
+  
+  .message-bubble.alim {
+    padding-left: 50px;
+  }
+  
+  .message-bubble.user::after,
+  .message-bubble.alim::after {
+    font-size: 1.2rem;
+    right: 15px;
+    left: 15px;
+    bottom: 12px;
+  }
+  
+  .list-item {
+    margin-bottom: 12px;
+  }
+  
+  .list-number,
+  .list-bullet {
+    width: 24px;
+    height: 24px;
+    font-size: 1rem;
+    margin-right: 10px;
+  }
+  
+  .list-title {
+    font-size: 1rem;
+  }
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  .message-bubble {
+    animation: none;
+    transition: none;
+  }
+  
+  .message-bubble::before,
+  .message-bubble::after {
+    animation: none;
+    transition: none;
+  }
+  
+  .word-reveal {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .message-bubble.user {
+    background: var(--paradise-bright);
+    color: var(--paradise-deep);
+    border: 3px solid var(--paradise-deep);
+  }
+  
+  .message-bubble.alim {
+    background: var(--paradise-deep);
+    color: var(--paradise-ethereal);
+    border: 3px solid var(--paradise-bright);
+  }
+  
+  .list-number,
+  .list-bullet {
+    background: var(--paradise-ethereal);
+    color: var(--paradise-deep);
+  }
+}
