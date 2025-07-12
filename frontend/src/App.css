@@ -81,6 +81,46 @@ body::before {
   position: relative;
 }
 
+/* Mobile menu toggle */
+.mobile-menu-toggle {
+  display: none;
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 1000;
+  background: linear-gradient(135deg, var(--paradise-bright) 0%, var(--paradise-light) 100%);
+  border: none;
+  border-radius: 12px;
+  padding: 12px;
+  color: var(--paradise-divine);
+  font-size: 1.2rem;
+  cursor: pointer;
+  box-shadow: var(--shadow-soft);
+  transition: all 0.3s ease;
+}
+
+.mobile-menu-toggle:hover {
+  transform: scale(1.05);
+  box-shadow: var(--shadow-elevated);
+}
+
+/* Mobile overlay */
+.mobile-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 998;
+  backdrop-filter: blur(5px);
+}
+
+.mobile-overlay.show {
+  display: block;
+}
+
 /* Enhanced Sidebar */
 .sidebar {
   width: 340px;
@@ -93,6 +133,12 @@ body::before {
   overflow: hidden;
   flex-shrink: 0;
   backdrop-filter: blur(20px);
+  transition: transform 0.3s ease;
+  z-index: 999;
+}
+
+.sidebar.mobile-hidden {
+  transform: translateX(-100%);
 }
 
 .sidebar::before {
@@ -448,28 +494,86 @@ body::before {
 }
 
 /* Responsive Design */
-@media (max-width: 768px) {
-  .App {
-    flex-direction: column;
+@media (max-width: 1024px) {
+  .mobile-menu-toggle {
+    display: block;
   }
   
   .sidebar {
-    width: 100%;
-    height: auto;
-    max-height: 40vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 320px;
+    transform: translateX(-100%);
+  }
+  
+  .sidebar.show {
+    transform: translateX(0);
   }
   
   .main-content {
-    margin: 10px;
-    padding: 15px;
+    margin: 0;
+    padding: 80px 15px 15px 15px;
+    border-radius: 0;
+    width: 100%;
+  }
+  
+  .chat-header {
+    padding: 20px 15px;
+    margin-bottom: 15px;
   }
   
   .chat-header h1 {
-    font-size: 2rem;
+    font-size: 1.8rem;
   }
   
   .chat-header p {
-    font-size: 1rem;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    width: 280px;
+  }
+  
+  .main-content {
+    padding: 70px 10px 10px 10px;
+  }
+  
+  .chat-header {
+    padding: 15px 10px;
+  }
+  
+  .chat-header h1 {
+    font-size: 1.6rem;
+  }
+  
+  .chat-header p {
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .App {
+    flex-direction: row;
+  }
+  
+  .sidebar {
+    width: 260px;
+  }
+  
+  .main-content {
+    padding: 60px 8px 8px 8px;
+  }
+  
+  .chat-header h1 {
+    font-size: 1.4rem;
+  }
+  
+  .chat-header p {
+    font-size: 0.8rem;
   }
 }
 
