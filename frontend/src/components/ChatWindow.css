@@ -1,23 +1,20 @@
-/* Enhanced Chat Window Styles */
 .chat-window {
   flex-grow: 1;
-  overflow-y: auto;
-  padding: 15px;
-  border-bottom: 2px solid var(--paradise-medium);
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
-  min-height: 0;
-  position: relative;
+  min-height: 0; /* CRITICAL for flex-grow in a flex container */
   background: linear-gradient(180deg, 
     rgba(45, 90, 71, 0.05) 0%, 
     rgba(26, 61, 46, 0.1) 100%);
   border-radius: 15px;
   margin-bottom: 10px;
+  padding: 15px;
+  position: relative;
 }
 
 .messages-container {
-  flex: 1;
+  flex-grow: 1;
+  overflow-y: auto; /* This container will scroll */
   display: flex;
   flex-direction: column;
   gap: 20px;

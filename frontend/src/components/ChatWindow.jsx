@@ -10,7 +10,7 @@ const ChatWindow = ({ messages, isLoading }) => {
   useEffect(() => {
     const chatContainer = chatContainerRef.current;
     if (chatContainer) {
-      const isScrolledToBottom = chatContainer.scrollHeight - chatContainer.clientHeight <= chatContainer.scrollTop + 1;
+      const isScrolledToBottom = chatContainer.scrollHeight - chatContainer.clientHeight <= chatContainer.scrollTop + 50; // 50px tolerance
       if (isScrolledToBottom) {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
       }
@@ -29,8 +29,8 @@ const ChatWindow = ({ messages, isLoading }) => {
   );
 
   return (
-    <div className="chat-window" ref={chatContainerRef}>
-      <div className="messages-container">
+    <div className="chat-window">
+      <div className="messages-container" ref={chatContainerRef}>
         {messages.length === 0 && !isLoading ? (
           <EmptyState />
         ) : (
