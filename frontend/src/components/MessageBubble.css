@@ -1,29 +1,26 @@
-/* frontend/src/components/MessageBubble.css */
+/* Enhanced Message Bubble Styles */
 .message-bubble {
-  margin-bottom: 15px;
-  padding: 18px 24px;
-  border-radius: 20px;
-  max-width: 75%;
+  margin-bottom: 20px;
+  padding: 22px 28px;
+  border-radius: 24px;
+  max-width: 78%;
   word-wrap: break-word;
   box-shadow: var(--shadow-soft);
-  font-size: 1rem;
-  line-height: 1.6;
+  font-size: 1.1rem;
+  line-height: 1.8;
+  font-weight: 450;
   position: relative;
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  animation: slideIn 0.4s ease-out;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  backdrop-filter: blur(20px);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  animation: slideInMessage 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  font-family: var(--font-primary);
+  /* REMOVED: overflow: hidden; - This was the cause of the shrinking bug in a scroll container */
 }
 
-@keyframes slideIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+@keyframes slideInMessage {
+  from { opacity: 0; transform: translateY(30px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 .message-content {
@@ -31,68 +28,62 @@
   z-index: 2;
 }
 
+/* User message styling */
 .message-bubble.user {
-  background: linear-gradient(135deg, var(--paradise-bright) 0%, var(--paradise-light) 100%);
+  background: linear-gradient(135deg, var(--paradise-bright) 0%, var(--paradise-light) 50%, var(--paradise-medium) 100%);
   color: var(--paradise-divine);
   align-self: flex-end;
   margin-left: auto;
-  border-bottom-right-radius: 6px;
-  padding-right: 40px; /* space for the icon */
+  border-bottom-right-radius: 8px;
+  padding-right: 55px;
   position: relative;
+  box-shadow: var(--shadow-soft), inset 0 2px 0 rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.2);
 }
 
 .message-bubble.user::after {
- 
   position: absolute;
-  right: 12px;
-  bottom: 10px;
-  font-size: 1.2rem;
-  opacity: 0.8;
+  right: 18px;
+  bottom: 15px;
+  font-size: 1.4rem;
+  opacity: 0.85;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.3));
+  transition: all 0.3s ease;
 }
 
-.message-bubble.user:hover {
-  box-shadow: var(--shadow-divine);
-  transform: translateY(-2px);
-}
-
+/* Alim message styling */
 .message-bubble.alim {
-  background: linear-gradient(135deg, rgba(45, 90, 71, 0.8) 0%, rgba(26, 61, 46, 0.8) 100%);
+  background: linear-gradient(135deg, rgba(45, 90, 71, 0.95) 0%, rgba(26, 61, 46, 0.95) 50%, rgba(10, 31, 15, 0.95) 100%);
   color: var(--paradise-ethereal);
   align-self: flex-start;
   margin-right: auto;
-  border-bottom-left-radius: 6px;
-  border: 1px solid var(--paradise-medium);
-  padding-left: 40px; /* space for the icon */
+  border-bottom-left-radius: 8px;
+  border: 2px solid var(--paradise-medium);
+  padding-left: 55px;
   position: relative;
+  box-shadow: var(--shadow-soft), inset 0 2px 0 rgba(143, 212, 168, 0.2);
 }
 
 .message-bubble.alim::after {
+  content: "✨";
   position: absolute;
-  left: 12px;
-  bottom: 10px;
-  font-size: 1.2rem;
-  opacity: 0.9;
-  animation: gentleGlow 3s ease-in-out infinite;
-}
-
-.message-bubble.alim:hover {
-  box-shadow: var(--shadow-divine);
-  transform: translateY(-2px);
+  left: 18px;
+  bottom: 15px;
+  font-size: 1.4rem;
+  opacity: 0.95;
+  animation: gentleGlow 4s ease-in-out infinite;
+  filter: drop-shadow(0 2px 8px rgba(143, 212, 168, 0.4));
+  transition: all 0.3s ease;
 }
 
 @keyframes gentleGlow {
-  0%,
-  100% {
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
-  }
-  50% {
-    filter: drop-shadow(0 2px 8px rgba(143, 212, 168, 0.4));
-  }
+  50% { filter: drop-shadow(0 4px 16px rgba(143, 212, 168, 0.6)); transform: scale(1.05); }
 }
 
-/* Styles pour le formatage Markdown */
+/* Enhanced Markdown styling */
 .text-line {
-  margin-bottom: 8px;
+  margin-bottom: 12px;
+  line-height: 1.8;
 }
 
 .text-line:last-child {
@@ -102,8 +93,17 @@
 .list-item {
   display: flex;
   align-items: flex-start;
-  margin-bottom: 12px;
-  line-height: 1.5;
+  margin-bottom: 14px;
+  line-height: 1.6;
+  padding: 8px 0;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.list-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+  padding-left: 8px;
+  padding-right: 8px;
 }
 
 .list-item:last-child {
@@ -112,82 +112,216 @@
 
 .list-number,
 .list-bullet {
-  font-weight: bold;
-  margin-right: 8px;
+  font-weight: 700;
+  margin-right: 12px;
   flex-shrink: 0;
   color: var(--paradise-glow);
-  font-size: 1.1rem;
+  font-size: 1.15rem;
+  min-width: 24px;
+  text-align: center;
+  background: rgba(143, 212, 168, 0.2);
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2px;
 }
 
 .list-title {
-  font-weight: bold;
-  margin-right: 4px;
+  font-weight: 700;
+  margin-right: 6px;
   color: inherit;
-}
-
-.message-bubble.user .list-title {
-  color: var(--paradise-divine);
-}
-
-.message-bubble.alim .list-title {
-  color: var(--paradise-ethereal);
+  font-size: 1.05rem;
+  letter-spacing: 0.3px;
 }
 
 .list-separator {
-  margin-right: 6px;
-  font-weight: bold;
+  margin-right: 8px;
+  font-weight: 600;
+  color: var(--paradise-glow);
 }
 
 .list-description {
   flex: 1;
-  line-height: 1.5;
+  line-height: 1.6;
+  font-weight: 400;
 }
 
-/* Styles pour le texte en gras */
 strong {
-  font-weight: 600;
-  color: inherit;
-}
-
-.message-bubble.user strong {
-  color: var(--pearl-white);
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  font-weight: 700;
+  color: var(--gold-soft);
 }
 
 .message-bubble.alim strong {
   color: var(--paradise-glow);
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
 }
 
-/* Amélioration de la lisibilité */
 .message-bubble p {
-  margin-bottom: 10px;
+  margin-bottom: 12px;
+  line-height: 1.7;
 }
 
 .message-bubble p:last-child {
   margin-bottom: 0;
 }
 
-/* --- Styles pour l'animation de dévoilement progressif --- */
-.word-reveal {
-  opacity: 0; /* Commence invisible */
-  transform: translateY(5px); /* Légèrement décalé vers le bas */
-  animation: revealWord 0.4s ease-out forwards; /* Durée de l'animation, easing, et reste en place */
-  display: inline-block; /* Permet d'appliquer la transformation et opacité à chaque mot */
+.message-bubble code {
+  background: rgba(0, 0, 0, 0.2);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 0.9em;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* L'animation elle-même est appliquée par JavaScript avec un délai.
-   Chaque span individuel n'a pas besoin d'un délai CSS ici,
-   car leur apparition est contrôlée par le setInterval de JS. */
-
-@keyframes revealWord {
-  from {
-    opacity: 0;
-    transform: translateY(5px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.message-bubble blockquote {
+  border-left: 4px solid var(--paradise-glow);
+  padding-left: 16px;
+  margin: 12px 0;
+  font-style: italic;
+  opacity: 0.9;
+  background: rgba(143, 212, 168, 0.1);
+  padding: 12px 16px;
+  border-radius: 0 8px 8px 0;
 }
-/* --- Fin des styles pour l'animation de dévoilement progressif --- */
+
+.arabic-text {
+  font-family: var(--font-arabic), serif;
+  font-size: 1.5rem;
+  line-height: 2.2rem;
+  direction: rtl;
+  text-align: right;
+  margin: 20px 0;
+  padding: 15px;
+  padding-right: 20px;
+  background: rgba(10, 31, 15, 0.5);
+  border-radius: 8px;
+  border-right: 4px solid var(--gold-divine);
+  border-left: none;
+  color: var(--paradise-ethereal);
+  position: relative;
+}
+
+.arabic-text::before {
+  content: "﴾";
+  position: absolute;
+  right: -15px;
+  top: 10px;
+  color: var(--gold-divine);
+  font-size: 1.5rem;
+  opacity: 0.7;
+}
+
+/* Styling for the new source and arabic blocks */
+.source-container, .arabic-container {
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid var(--paradise-medium);
+}
+
+.source-title, .arabic-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--paradise-glow);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+
+.source-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.source-item {
+  font-size: 0.9rem;
+  color: var(--paradise-glow);
+  opacity: 0.8;
+  line-height: 1.6;
+}
+
+.arabic-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.play-arabic-button {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--paradise-medium);
+  color: var(--paradise-ethereal);
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.play-arabic-button:hover:not(:disabled) {
+  background-color: var(--paradise-bright);
+}
+
+.play-arabic-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* A small spinner for when audio is loading */
+.mini-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: var(--paradise-ethereal);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* NEW: Styles for the message row layout */
+.message-row {
+  display: flex;
+  align-items: flex-end; /* Aligns avatar with the bottom of the bubble */
+  gap: 15px;
+  max-width: 85%; /* The row can take a bit more space */
+}
+
+/* Align user messages to the right */
+.message-row.user {
+  margin-left: auto;
+  flex-direction: row-reverse; /* This keeps the bubble on the right */
+}
+
+/* Align Alim messages to the left */
+.message-row.alim {
+  margin-right: auto;
+}
+
+/* Make the bubble take up the remaining space */
+.message-row .message-bubble {
+  flex-grow: 1;
+}
+
+/* NEW: Styling for the avatar image */
+.message-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 2px solid var(--paradise-medium);
+  box-shadow: var(--shadow-soft);
+  flex-shrink: 0; /* Prevents the avatar from shrinking */
+  margin-bottom: 20px; /* Aligns with the message bubble's margin */
+}
+
+/* Remove the alignment from the bubble itself, as the row now handles it */
+.message-bubble.user, .message-bubble.alim {
+  align-self: initial;
+  margin-left: 0;
+  margin-right: 0;
+}

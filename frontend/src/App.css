@@ -1,4 +1,4 @@
-/* CSS Variables for "Paradise Green" Theme */
+/* CSS Variables for Enhanced "Paradise Green" Theme */
 :root {
   /* Base Colors - Paradise Greens */
   --paradise-deep: #0a1f0f;
@@ -16,11 +16,17 @@
   --silver-moon: #e6f3ff;
   --pearl-white: #fefffe;
 
-  /* Shadows and Effects */
+  /* Enhanced Shadows and Effects */
   --shadow-soft: 0 4px 20px rgba(106, 184, 138, 0.15);
   --shadow-divine: 0 8px 32px rgba(106, 184, 138, 0.25);
+  --shadow-elevated: 0 12px 48px rgba(106, 184, 138, 0.35);
   --glow-soft: 0 0 20px rgba(143, 212, 168, 0.3);
   --glow-strong: 0 0 40px rgba(143, 212, 168, 0.5);
+  --glow-divine: 0 0 60px rgba(255, 215, 0, 0.4);
+
+  /* Typography */
+  --font-primary: "Inter", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  --font-arabic: "Amiri", "Times New Roman", serif;
 }
 
 * {
@@ -30,7 +36,7 @@
 }
 
 body {
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-family: var(--font-primary);
   background: linear-gradient(135deg, var(--paradise-deep) 0%, var(--paradise-dark) 50%, var(--paradise-medium) 100%);
   color: var(--paradise-divine);
   height: 100vh;
@@ -38,7 +44,7 @@ body {
   position: relative;
 }
 
-/* Floating particle effect in the background */
+/* Enhanced floating particle effect */
 body::before {
   content: "";
   position: fixed;
@@ -46,25 +52,21 @@ body::before {
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: radial-gradient(circle at 20% 20%, rgba(143, 212, 168, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 80% 80%, rgba(106, 184, 138, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 40% 60%, rgba(184, 242, 208, 0.05) 0%, transparent 50%);
-  animation: float 20s ease-in-out infinite;
+  background-image: 
+    radial-gradient(circle at 20% 20%, rgba(143, 212, 168, 0.12) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(106, 184, 138, 0.12) 0%, transparent 50%),
+    radial-gradient(circle at 40% 60%, rgba(184, 242, 208, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 70% 30%, rgba(255, 215, 0, 0.05) 0%, transparent 50%);
+  animation: float 25s ease-in-out infinite;
   pointer-events: none;
   z-index: -1;
 }
 
 @keyframes float {
-  0%,
-  100% {
-    transform: translateY(0px) rotate(0deg);
-  }
-  33% {
-    transform: translateY(-20px) rotate(1deg);
-  }
-  66% {
-    transform: translateY(10px) rotate(-1deg);
-  }
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  25% { transform: translateY(-15px) rotate(1deg); }
+  50% { transform: translateY(-25px) rotate(0deg); }
+  75% { transform: translateY(-10px) rotate(-1deg); }
 }
 
 #root {
@@ -76,19 +78,67 @@ body::before {
   height: 100vh;
   overflow: hidden;
   backdrop-filter: blur(10px);
+  position: relative;
 }
 
-/* Paradise Sidebar */
+/* Mobile menu toggle */
+.mobile-menu-toggle {
+  display: none;
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 1000;
+  background: linear-gradient(135deg, var(--paradise-bright) 0%, var(--paradise-light) 100%);
+  border: none;
+  border-radius: 12px;
+  padding: 12px;
+  color: var(--paradise-divine);
+  font-size: 1.2rem;
+  cursor: pointer;
+  box-shadow: var(--shadow-soft);
+  transition: all 0.3s ease;
+}
+
+.mobile-menu-toggle:hover {
+  transform: scale(1.05);
+  box-shadow: var(--shadow-elevated);
+}
+
+/* Mobile overlay */
+.mobile-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 998;
+  backdrop-filter: blur(5px);
+}
+
+.mobile-overlay.show {
+  display: block;
+}
+
+/* Enhanced Sidebar */
 .sidebar {
-  width: 320px;
+  width: 340px;
   background: linear-gradient(180deg, var(--paradise-dark) 0%, var(--paradise-deep) 100%);
-  border-right: 1px solid var(--paradise-light);
-  box-shadow: var(--shadow-divine);
+  border-right: 2px solid var(--paradise-light);
+  box-shadow: var(--shadow-elevated);
   display: flex;
   flex-direction: column;
   position: relative;
   overflow: hidden;
   flex-shrink: 0;
+  backdrop-filter: blur(20px);
+  transition: transform 0.3s ease;
+  z-index: 999;
+}
+
+.sidebar.mobile-hidden {
+  transform: translateX(-100%);
 }
 
 .sidebar::before {
@@ -97,61 +147,81 @@ body::before {
   top: 0;
   left: 0;
   right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, var(--paradise-glow), transparent);
-  animation: shimmer 3s ease-in-out infinite;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--gold-divine), var(--paradise-glow), transparent);
+  animation: shimmer 4s ease-in-out infinite;
 }
 
 @keyframes shimmer {
-  0%,
-  100% {
-    opacity: 0.3;
-  }
-  50% {
-    opacity: 1;
-  }
+  0%, 100% { opacity: 0.4; transform: translateX(-100%); }
+  50% { opacity: 1; transform: translateX(100%); }
 }
 
 .sidebar-header {
-  padding: 30px 25px;
+  padding: 35px 30px;
   text-align: center;
-  border-bottom: 1px solid var(--paradise-medium);
+  border-bottom: 2px solid var(--paradise-medium);
   background: linear-gradient(135deg, var(--paradise-medium) 0%, var(--paradise-dark) 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.sidebar-header::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at center, rgba(255, 215, 0, 0.1) 0%, transparent 70%);
+  animation: pulse-header 6s ease-in-out infinite;
+}
+
+@keyframes pulse-header {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(1.05); }
 }
 
 .sidebar h2 {
-  font-size: 1.8rem;
-  font-weight: 600;
+  font-size: 2rem;
+  font-weight: 700;
   color: var(--paradise-ethereal);
   text-shadow: var(--glow-soft);
-  margin-bottom: 8px;
+  margin-bottom: 12px;
   margin-top: 0;
+  position: relative;
+  z-index: 2;
+  letter-spacing: 0.5px;
 }
 
 .subtitle {
   color: var(--paradise-glow);
-  font-size: 0.9rem;
-  opacity: 0.9;
+  font-size: 1rem;
+  opacity: 0.95;
   font-style: italic;
+  position: relative;
+  z-index: 2;
+  font-weight: 300;
 }
 
 .new-chat-btn {
-  margin: 20px;
-  padding: 15px 20px;
+  margin: 25px 20px;
+  padding: 18px 24px;
   background: linear-gradient(135deg, var(--paradise-bright) 0%, var(--paradise-light) 100%);
   border: none;
-  border-radius: 15px;
+  border-radius: 20px;
   color: var(--paradise-divine);
-  font-size: 1rem;
-  font-weight: 500;
+  font-size: 1.1rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: var(--shadow-soft);
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   position: relative;
   overflow: hidden;
+  border: 2px solid transparent;
 }
 
 .new-chat-btn::before {
@@ -161,8 +231,8 @@ body::before {
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-  transition: left 0.5s ease;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.6s ease;
 }
 
 .new-chat-btn:hover::before {
@@ -170,116 +240,171 @@ body::before {
 }
 
 .new-chat-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-divine);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: var(--shadow-elevated);
   background: linear-gradient(135deg, var(--paradise-glow) 0%, var(--paradise-bright) 100%);
+  border-color: var(--gold-divine);
+}
+
+.new-chat-btn:active {
+  transform: translateY(-1px) scale(0.98);
 }
 
 .btn-icon {
-  font-size: 1.2rem;
+  font-size: 1.3rem;
+  transition: transform 0.3s ease;
+}
+
+.new-chat-btn:hover .btn-icon {
+  transform: rotate(90deg);
 }
 
 .session-list {
   flex-grow: 1;
-  padding: 10px 20px;
+  padding: 15px 20px;
   overflow-y: auto;
-  padding-right: 0.5px;
+  padding-right: 10px;
 }
 
 .session-item {
   display: flex;
   align-items: center;
-  gap: 15px;
-  padding: 15px;
-  margin-bottom: 10px;
-  background: rgba(45, 90, 71, 0.3);
-  border-radius: 12px;
+  gap: 18px;
+  padding: 18px 20px;
+  margin-bottom: 12px;
+  background: rgba(45, 90, 71, 0.4);
+  border-radius: 16px;
   cursor: pointer;
-  transition: all 0.3s ease;
-  border: 1px solid transparent;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 2px solid transparent;
+  position: relative;
+  overflow: hidden;
+}
+
+.session-item::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(143, 212, 168, 0.1), transparent);
+  transition: left 0.5s ease;
+}
+
+.session-item:hover::before {
+  left: 100%;
 }
 
 .session-item:hover {
-  background: rgba(74, 139, 107, 0.2);
-  transform: translateX(5px);
+  background: rgba(74, 139, 107, 0.3);
+  transform: translateX(8px) scale(1.02);
   border-color: var(--paradise-light);
+  box-shadow: var(--shadow-soft);
 }
 
 .session-item.active {
   background: linear-gradient(135deg, var(--paradise-light) 0%, var(--paradise-medium) 100%);
   border-color: var(--paradise-bright);
   box-shadow: var(--glow-soft);
+  transform: translateX(5px);
 }
 
 .session-icon {
-  font-size: 1.5rem;
-  opacity: 0.8;
+  font-size: 1.6rem;
+  opacity: 0.9;
+  transition: transform 0.3s ease;
+}
+
+.session-item:hover .session-icon {
+  transform: scale(1.1);
 }
 
 .session-content {
   flex: 1;
+  min-width: 0;
 }
 
 .session-item h4 {
   color: var(--paradise-ethereal);
-  font-size: 0.95rem;
-  margin: 0 0 4px 0;
+  font-size: 1rem;
+  margin: 0 0 6px 0;
+  font-weight: 600;
+  letter-spacing: 0.3px;
 }
 
 .session-item p {
   color: var(--paradise-glow);
-  font-size: 0.8rem;
-  opacity: 0.8;
+  font-size: 0.85rem;
+  opacity: 0.85;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   margin: 0;
+  line-height: 1.4;
 }
 
 .no-sessions {
   color: var(--paradise-glow);
   text-align: center;
   font-style: italic;
-  opacity: 0.7;
+  opacity: 0.8;
+  padding: 40px 20px;
+  font-size: 1rem;
 }
 
 .sidebar-footer {
-  padding: 20px;
-  border-top: 1px solid var(--paradise-medium);
-  background: rgba(26, 61, 46, 0.8);
+  padding: 25px 20px;
+  border-top: 2px solid var(--paradise-medium);
+  background: rgba(26, 61, 46, 0.9);
+  position: relative;
 }
 
 .spiritual-quote {
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   color: var(--paradise-glow);
   text-align: center;
   font-style: italic;
-  line-height: 1.4;
-  opacity: 0.9;
+  line-height: 1.5;
+  opacity: 0.95;
+  font-weight: 300;
+  position: relative;
+  z-index: 2;
 }
 
-/* Paradise Main Content */
+.spiritual-quote::before {
+  content: "✨";
+  display: block;
+  font-size: 1.2rem;
+  margin-bottom: 8px;
+  opacity: 0.7;
+}
+
+/* Enhanced Main Content */
 .main-content {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
   background: linear-gradient(135deg, var(--paradise-deep) 0%, var(--paradise-dark) 100%);
   position: relative;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: var(--shadow-divine);
-  margin: 20px;
+  padding: 10px;
+  border-radius: 15px;
+  box-shadow: var(--shadow-elevated);
+  margin: 5px;
+  backdrop-filter: blur(20px);
+  border: 2px solid rgba(143, 212, 168, 0.1);
 }
 
 .chat-header {
   text-align: center;
-  padding: 30px 20px;
+  padding: 10px 10px;
   position: relative;
-  border-bottom: 1px solid var(--paradise-medium);
-  background: linear-gradient(135deg, rgba(45, 90, 71, 0.3) 0%, rgba(26, 61, 46, 0.3) 100%);
-  margin-bottom: 20px;
-  border-radius: 15px;
+  border-bottom: 2px solid var(--paradise-medium);
+  background: linear-gradient(135deg, rgba(45, 90, 71, 0.4) 0%, rgba(26, 61, 46, 0.4) 100%);
+  margin-bottom: 25px;
+  border-radius: 20px;
   flex-shrink: 0;
+  overflow: hidden;
 }
 
 .header-glow {
@@ -287,67 +412,207 @@ body::before {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 200px;
-  height: 100px;
+  width: 250px;
+  height: 120px;
   background: radial-gradient(ellipse, var(--paradise-glow) 0%, transparent 70%);
-  opacity: 0.1;
-  animation: pulse 4s ease-in-out infinite;
+  opacity: 0.15;
+  animation: pulse-divine 5s ease-in-out infinite;
 }
 
-@keyframes pulse {
-  0%,
-  100% {
+@keyframes pulse-divine {
+  0%, 100% { 
     transform: translate(-50%, -50%) scale(1);
-    opacity: 0.1;
+    opacity: 0.15;
   }
-  50% {
-    transform: translate(-50%, -50%) scale(1.2);
-    opacity: 0.2;
+  50% { 
+    transform: translate(-50%, -50%) scale(1.3);
+    opacity: 0.25;
   }
 }
 
 .chat-header h1 {
-  font-size: 2.2rem;
+  font-size: 2.5rem;
   color: var(--paradise-ethereal);
   text-shadow: var(--glow-soft);
-  margin-bottom: 10px;
+  margin-bottom: 15px;
   position: relative;
   z-index: 1;
+  font-weight: 700;
+  letter-spacing: 1px;
 }
 
 .chat-header p {
   color: var(--paradise-glow);
-  font-size: 1.1rem;
-  opacity: 0.9;
+  font-size: 1.2rem;
+  opacity: 0.95;
   position: relative;
   z-index: 1;
+  font-weight: 300;
+  line-height: 1.5;
 }
 
-/* Custom Scrollbar */
+/* Enhanced Custom Scrollbar */
 .session-list::-webkit-scrollbar,
 .chat-window::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
 }
 
 .session-list::-webkit-scrollbar-track,
 .chat-window::-webkit-scrollbar-track {
   background: var(--paradise-deep);
-  border-radius: 3px;
+  border-radius: 4px;
 }
 
 .session-list::-webkit-scrollbar-thumb,
 .chat-window::-webkit-scrollbar-thumb {
-  background: var(--paradise-light);
-  border-radius: 3px;
+  background: linear-gradient(180deg, var(--paradise-light), var(--paradise-bright));
+  border-radius: 4px;
+  border: 1px solid var(--paradise-medium);
 }
 
 .session-list::-webkit-scrollbar-thumb:hover,
 .chat-window::-webkit-scrollbar-thumb:hover {
-  background: var(--paradise-bright);
+  background: linear-gradient(180deg, var(--paradise-bright), var(--paradise-glow));
 }
 
+/* Enhanced Speaking State */
 .App.alim-speaking .chat-header {
   border-color: var(--gold-divine);
-  box-shadow: 0 0 20px var(--gold-soft);
+  box-shadow: var(--glow-divine);
+  animation: speaking-pulse 2s ease-in-out infinite;
 }
 
+@keyframes speaking-pulse {
+  0%, 100% { 
+    box-shadow: var(--glow-divine);
+    border-color: var(--gold-divine);
+  }
+  50% { 
+    box-shadow: 0 0 80px var(--gold-soft);
+    border-color: var(--gold-soft);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .mobile-menu-toggle {
+    display: block;
+  }
+  
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 320px;
+    transform: translateX(-100%);
+  }
+  
+  .sidebar.show {
+    transform: translateX(0);
+  }
+  
+  .main-content {
+    margin: 0;
+    padding: 80px 15px 15px 15px;
+    border-radius: 0;
+    width: 100%;
+  }
+  
+  .chat-header {
+    padding: 20px 15px;
+    margin-bottom: 15px;
+  }
+  
+  .chat-header h1 {
+    font-size: 1.8rem;
+  }
+  
+  .chat-header p {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    width: 280px;
+  }
+  
+  .main-content {
+    padding: 70px 10px 10px 10px;
+  }
+  
+  .chat-header {
+    padding: 15px 10px;
+  }
+  
+  .chat-header h1 {
+    font-size: 1.6rem;
+  }
+  
+  .chat-header p {
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .App {
+    flex-direction: row;
+  }
+  
+  .sidebar {
+    width: 260px;
+  }
+  
+  .main-content {
+    padding: 60px 8px 8px 8px;
+  }
+  
+  .chat-header h1 {
+    font-size: 1.4rem;
+  }
+  
+  .chat-header p {
+    font-size: 0.8rem;
+  }
+}
+
+/* Loading States */
+.loading-shimmer {
+  background: linear-gradient(90deg, 
+    rgba(143, 212, 168, 0.1) 0%, 
+    rgba(143, 212, 168, 0.3) 50%, 
+    rgba(143, 212, 168, 0.1) 100%);
+  background-size: 200% 100%;
+  animation: shimmer-loading 2s infinite;
+}
+
+@keyframes shimmer-loading {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* Enhanced Focus States */
+*:focus-visible {
+  outline: 2px solid var(--paradise-bright);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Accessibility Improvements */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+  :root {
+    --paradise-ethereal: #ffffff;
+    --paradise-glow: #ffffff;
+    --paradise-divine: #ffffff;
+  }
+}

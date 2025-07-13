@@ -1,112 +1,168 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { transcribeAudio } from "../api";
 import MicrophoneIcon from "./icons/MicrophoneIcon";
 import StopIcon from "./icons/StopIcon";
 import SendIcon from "./icons/SendIcon";
+import PlusIcon from "./icons/PlusIcon"; // The new icon
 import "./ChatInput.css";
 
-const ChatInput = ({ onSendMessage, isLoading, onVoiceSubmit }) => {
-  const [message, setMessage] = useState("");
-  const [isRecording, setIsRecording] = useState(false);
-  const mediaRecorderRef = useRef(null);
-  const audioChunksRef = useRef([]);
+const ChatInput = ( { onSendMessage, isLoading, onVoiceSubmit } ) =>
+{
+  const [ message, setMessage ] = useState( "" );
+  const [ isRecording, setIsRecording ] = useState( false );
+  const [ showVoiceFeedback, setShowVoiceFeedback ] = useState( false ); // We can repurpose this for a visual cue
+  const textareaRef = useRef( null );
+  const mediaRecorderRef = useRef( null );
+  const audioChunksRef = useRef( [] );
 
-  const handleToggleRecording = async () => {
-    if (isRecording) {
+  // Auto-resize textarea
+  useEffect( () =>
+  {
+    if ( textareaRef.current )
+    {
+      textareaRef.current.style.height = 'auto';
+      const maxHeight = 180; // Set a max-height
+      const newHeight = Math.min( textareaRef.current.scrollHeight, maxHeight );
+      textareaRef.current.style.height = newHeight + 'px';
+    }
+  }, [ message ] );
+
+  // --- AUDIO RECORDING LOGIC (Re-integrated) ---
+
+  const handleToggleRecording = async () =>
+  {
+    if ( isRecording )
+    {
       handleStopRecording();
-    } else {
+    } else
+    {
       await handleStartRecording();
     }
   };
 
-  const handleStartRecording = async () => {
-    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        mediaRecorderRef.current = new MediaRecorder(stream);
-        mediaRecorderRef.current.ondataavailable = (event) => {
-          audioChunksRef.current.push(event.data);
+  const handleStartRecording = async () =>
+  {
+    if ( navigator.mediaDevices && navigator.mediaDevices.getUserMedia )
+    {
+      try
+      {
+        const stream = await navigator.mediaDevices.getUserMedia( { audio: true } );
+        mediaRecorderRef.current = new MediaRecorder( stream );
+        audioChunksRef.current = []; // Clear previous chunks
+
+        mediaRecorderRef.current.ondataavailable = ( event ) =>
+        {
+          audioChunksRef.current.push( event.data );
         };
-        mediaRecorderRef.current.onstop = async () => {
-          const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
-          audioChunksRef.current = [];
-          try {
-            const data = await transcribeAudio(audioBlob);
-            onVoiceSubmit(data.transcription);
-          } catch (error) {
-            console.error("Error transcribing audio:", error);
+
+        mediaRecorderRef.current.onstop = async () =>
+        {
+          const audioBlob = new Blob( audioChunksRef.current, { type: 'audio/webm' } );
+          stream.getTracks().forEach( track => track.stop() ); // Release microphone
+
+          if ( audioBlob.size > 0 )
+          {
+            try
+            {
+              const data = await transcribeAudio( audioBlob );
+              onVoiceSubmit( data.transcription );
+            } catch ( error )
+            {
+              console.error( "Error transcribing audio:", error );
+              alert( "Sorry, there was an error processing the audio." );
+            }
           }
         };
+
         mediaRecorderRef.current.start();
-        setIsRecording(true);
-      } catch (error) {
-        console.error("Error accessing microphone:", error);
+        setIsRecording( true );
+        setShowVoiceFeedback( true ); // You can use this to show a visual indicator
+      } catch ( error )
+      {
+        console.error( "Error accessing microphone:", error );
+        alert( "Could not access microphone. Please check your permissions in the browser settings." );
       }
+    } else
+    {
+      alert( "Voice recording is not supported in your browser." );
     }
   };
 
-  const handleStopRecording = () => {
-    if (mediaRecorderRef.current && isRecording) {
+  const handleStopRecording = () =>
+  {
+    if ( mediaRecorderRef.current && isRecording )
+    {
       mediaRecorderRef.current.stop();
-      setIsRecording(false);
+      setIsRecording( false );
+      setShowVoiceFeedback( false );
     }
   };
 
-  const handleSubmit = (e) => {
+  // --- FORM SUBMISSION LOGIC ---
+
+  const handleSubmit = ( e ) =>
+  {
     e.preventDefault();
-    if (message.trim() && !isLoading) {
-      onSendMessage(message);
-      setMessage("");
+    if ( message.trim() && !isLoading )
+    {
+      onSendMessage( message );
+      setMessage( "" );
     }
   };
 
-  const handleKeyDown = (e) => {
-    if (e.key === "Enter" && !e.shiftKey) {
+  const handleKeyDown = ( e ) =>
+  {
+    if ( e.key === "Enter" && !e.shiftKey )
+    {
       e.preventDefault();
-      handleSubmit(e);
+      handleSubmit( e );
     }
   };
 
   return (
     <div className="chat-input-container">
-      <form className="chat-input-form" onSubmit={handleSubmit}>
-        <div className="input-wrapper">
+      <form onSubmit={handleSubmit} className="chat-input-form">
+
+        <div className="textarea-wrapper">
           <textarea
+            ref={textareaRef}
             value={message}
-            onChange={(e) => setMessage(e.target.value)}
+            onChange={( e ) => setMessage( e.target.value )}
             onKeyDown={handleKeyDown}
-            placeholder="Write your message with serenity... ✨ (Shift+Enter for a new line)"
+            placeholder="Ask Alim..."
             disabled={isLoading}
             rows={1}
             className="message-input"
           />
-          <div className="input-glow"></div>
         </div>
 
-        <button
-          type="button"
-          onClick={handleToggleRecording}
-          className={`mic-button ${isRecording ? "recording" : ""}`}
-        >
-          {isRecording ? <StopIcon /> : <MicrophoneIcon />}
-        </button>
+        <div className="action-bar">
+          <div className="action-bar-left">
+            <button type="button" className="icon-button attachment-button" title="Add attachment (coming soon)">
+              <PlusIcon />
+            </button>
+          </div>
 
-        <button type="submit" disabled={isLoading || !message.trim()} className="send-button">
-          <span className="button-content">
-            {isLoading ? (
-              <>
-                <span className="loading-spinner"></span>
-                Sending...
-              </>
-            ) : (
-              <>
-                <SendIcon />
-                Send
-              </>
-            )}
-          </span>
-          <div className="button-glow"></div>
-        </button>
+          <div className="action-bar-right">
+            <button
+              type="button"
+              onClick={handleToggleRecording}
+              className={`icon-button mic-button ${ isRecording ? "recording" : "" }`}
+              disabled={isLoading}
+              title={isRecording ? "Stop recording" : "Start voice input"}
+            >
+              {isRecording ? <StopIcon /> : <MicrophoneIcon />}
+            </button>
+            <button
+              type="submit"
+              disabled={isLoading || !message.trim()}
+              className="icon-button send-button"
+              title="Send message"
+            >
+              {isLoading ? <span className="loading-spinner"></span> : <SendIcon />}
+            </button>
+          </div>
+        </div>
       </form>
     </div>
   );

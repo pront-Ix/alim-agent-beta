@@ -95,3 +95,23 @@ export const synthesizeSpeech = async (text) => {
     throw error;
   }
 };
+
+// NEW: Function to call the Arabic synthesis endpoint
+export const synthesizeArabicSpeech = async (text) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/v1/voice/synthesize_arabic?text=${encodeURIComponent(text)}`, {
+      method: 'POST',
+      headers: {
+        'Accept': 'audio/mpeg',
+      },
+    });
+    if (!response.ok) {
+      throw new Error('Error in Arabic speech synthesis.');
+    }
+    const audioBlob = await response.blob();
+    return URL.createObjectURL(audioBlob);
+  } catch (error) {
+    console.error('Error synthesizing Arabic speech:', error);
+    throw error;
+  }
+};

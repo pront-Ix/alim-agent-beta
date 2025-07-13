@@ -15,3 +15,4 @@ conversation_memories/
 
 # FAISS index
 faiss_index/
+.DS_Store

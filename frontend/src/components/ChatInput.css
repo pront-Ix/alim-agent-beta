@@ -1,202 +1,115 @@
+/* New Gemini-style Chat Input Layout */
 .chat-input-container {
-  padding: 20px;
-  border-top: 1px solid var(--paradise-medium);
-  background: linear-gradient(135deg, rgba(26, 61, 46, 0.8) 0%, rgba(10, 31, 15, 0.8) 100%);
-  backdrop-filter: blur(10px);
-  border-radius: 15px;
-  margin-top: 20px;
-  flex-shrink: 0;
+  background-color: #1f2229; /* A deep, serene dark color */
+  border: 1px solid var(--paradise-medium);
+  border-radius: 28px; /* The rounded container */
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  margin: 10px 20px; /* Adjust margin as needed */
+  transition: all 0.3s ease;
+  box-shadow: var(--shadow-soft);
+}
+
+.chat-input-container:focus-within {
+  border-color: var(--paradise-bright);
+  box-shadow: var(--shadow-elevated);
 }
 
 .chat-input-form {
   display: flex;
-  align-items: flex-end;
-  gap: 15px;
-  max-width: 1000px;
-  margin: 0 auto;
+  flex-direction: column;
+  width: 100%;
 }
 
-.input-wrapper {
-  flex: 1;
-  position: relative;
+.textarea-wrapper {
+  width: 100%;
 }
 
 .message-input {
   width: 100%;
-  padding: 16px 20px;
-  border: 2px solid var(--paradise-medium);
-  border-radius: 25px;
-  font-size: 1rem;
-  font-family: inherit;
-  line-height: 1.4;
-  resize: none;
-  min-height: 52px;
-  max-height: 150px;
-  overflow-y: auto;
-  background: linear-gradient(135deg, rgba(45, 90, 71, 0.3) 0%, rgba(26, 61, 46, 0.3) 100%);
-  color: var(--paradise-ethereal);
-  backdrop-filter: blur(10px);
-  transition: all 0.3s ease;
+  background-color: transparent;
+  border: none;
   outline: none;
+  color: var(--paradise-ethereal);
+  font-size: 1.1rem;
+  padding: 1px;
+  resize: none;
+  font-family: var(--font-primary);
+  line-height: 1.6;
+  max-height: 180px; /* Corresponds to useEffect logic */
+  overflow-y: auto; /* Show scrollbar if max-height is reached */
 }
 
 .message-input::placeholder {
-  color: var(--paradise-glow);
-  opacity: 0.7;
+  color: #8c9199; /* A calm, greyish placeholder color */
 }
 
-.message-input:focus {
-  border-color: var(--paradise-bright);
-  box-shadow: 0 0 20px rgba(106, 184, 138, 0.3);
-  background: linear-gradient(135deg, rgba(45, 90, 71, 0.4) 0%, rgba(26, 61, 46, 0.4) 100%);
+.action-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
 }
 
-.input-glow {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  border-radius: 25px;
-  background: var(--glow-soft);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  pointer-events: none;
-}
-
-.message-input:focus + .input-glow {
-  opacity: 0.2;
-}
-
-.send-button {
-  position: relative;
-  padding: 16px 24px;
-  border: none;
-  border-radius: 25px;
-  font-size: 1rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  background: linear-gradient(135deg, var(--paradise-bright) 0%, var(--paradise-light) 100%);
-  color: var(--paradise-divine);
-  box-shadow: var(--shadow-soft);
-  overflow: hidden;
-  min-height: 52px;
-}
-
-.send-button:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-divine);
-  background: linear-gradient(135deg, var(--paradise-glow) 0%, var(--paradise-bright) 100%);
-}
-
-.send-button:active:not(:disabled) {
-  transform: translateY(0);
-}
-
-.send-button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  transform: none;
-}
-
-.button-content {
+.action-bar-left, .action-bar-right {
   display: flex;
   align-items: center;
   gap: 8px;
-  position: relative;
-  z-index: 2;
 }
 
-.send-icon {
-  font-size: 1.1rem;
-}
-
-.loading-spinner {
-  width: 16px;
-  height: 16px;
-  border: 2px solid transparent;
-  border-top: 2px solid currentColor;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.button-glow {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  border-radius: 25px;
-  background: var(--glow-soft);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  pointer-events: none;
-}
-
-.send-button:hover:not(:disabled) .button-glow {
-  opacity: 0.3;
-}
-
-/* Animation de brillance sur le bouton */
-.send-button::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-  transition: left 0.5s ease;
-  z-index: 1;
-}
-
-.send-button:hover:not(:disabled)::before {
-  left: 100%;
-}
-
-.mic-button {
-  background: var(--paradise-light);
-  border: none;
-  color: var(--paradise-divine);
-  font-size: 1.5rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  border-radius: 50%;
-  width: 52px;
-  height: 52px;
+/* Base style for all small icon buttons */
+.icon-button {
   display: flex;
-  justify-content: center;
   align-items: center;
-  box-shadow: var(--shadow-soft);
+  justify-content: center;
+  background: transparent;
+  border: none;
+  border-radius: 50%;
+  padding: 8px;
+  cursor: pointer;
+  color: #8c9199; /* Calm grey for icons */
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-.mic-button:hover {
-  background: var(--paradise-bright);
-  box-shadow: var(--shadow-divine);
+.icon-button:hover:not(:disabled) {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--paradise-glow);
 }
 
+/* Specific styling for the prominent send button */
+.send-button {
+  background-color: var(--paradise-medium); /* Main call-to-action color */
+  color: var(--paradise-divine);
+  width: 44px;
+  height: 44px;
+  padding: 0; /* Reset padding for exact size */
+}
+
+.send-button:hover:not(:disabled) {
+  background-color: var(--paradise-bright);
+}
+
+.send-button:disabled {
+  background-color: #333842;
+  color: #5f6368;
+  cursor: not-allowed;
+}
+
+.send-button svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* Spinner inside the send button */
+.send-button .loading-spinner {
+  width: 22px;
+  height: 22px;
+  border-width: 2px;
+}
+
+/* Recording state for mic button */
 .mic-button.recording {
-  background: red;
-  color: white;
-  animation: pulse 1s infinite;
+  color: #e84135; /* A clear red for recording */
+  background-color: rgba(232, 65, 53, 0.1);
 }
-
-@keyframes pulse {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.1);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-
