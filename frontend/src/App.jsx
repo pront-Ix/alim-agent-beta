@@ -21,6 +21,7 @@ function App ()
   const [ sessionList, setSessionList ] = useState( [] );
   const [ isSessionsLoading, setIsSessionsLoading ] = useState( true );
   const [ isSidebarOpen, setIsSidebarOpen ] = useState( false );
+  const [ alimTyping, setAlimTyping ] = useState(false);
 
   // Fetch sessions on application load
   useEffect( () =>
@@ -94,78 +95,73 @@ function App ()
     }
   };
 
-  // --- KEY CHANGE IS IN THIS FUNCTION ---
-  const handleSendMessage = async ( userMessage, isVoiceInput = false ) =>
-  {
-    if ( !currentSessionId )
-    {
-      console.error( "Session ID is not set. Cannot send message." );
+  const handleSendMessage = async (userMessage, isVoiceInput = false) => {
+    if (!currentSessionId) {
+      console.error("Session ID is not set. Cannot send message.");
       return;
     }
 
     const newUserMessage = { text: userMessage, sender: "user" };
-    setMessages( ( prevMessages ) => [ ...prevMessages, newUserMessage ] );
-    setIsLoading( true );
+    setMessages((prevMessages) => [...prevMessages, newUserMessage]);
+    setIsLoading(true);
+    setAlimTyping(true);
 
-    try
-    {
-      const response = await sendMessageToAlim( userMessage, currentSessionId );
-      const alimResponseText = response.answer;
+    try {
+      const response = await fetch(`http://localhost:8000/api/message`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ message: userMessage, session_id: currentSessionId }),
+      });
 
-      const alimResponseObject = { text: alimResponseText, sender: "alim" };
-      setMessages( ( prevMessages ) => [ ...prevMessages, alimResponseObject ] );
+      if (!response.body) return;
 
-      // --- CRITICAL CHANGE FOR TTS ---
-      // We only read the main answer, not the sources or Arabic text.
-      if ( isVoiceInput && alimResponseText )
-      {
-        setIsAlimSpeaking( true );
-        try
-        {
-          // 1. Split the full response by our separator '---'
-          const responseParts = alimResponseText.split( '\n---\n' );
-          // 2. The text to read is only the first part (the narrative answer)
-          const textToRead = responseParts[ 0 ].trim();
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let alimResponseText = '';
 
-          // 3. Synthesize speech only for that part, if it exists
-          if ( textToRead )
-          {
-            const audioUrl = await synthesizeSpeech( textToRead );
-            const audio = new Audio( audioUrl );
-            audio.onended = () => setIsAlimSpeaking( false );
-            audio.onerror = () =>
-            {
-              console.error( "Error playing synthesized speech." );
-              setIsAlimSpeaking( false );
-            };
-            audio.play();
-          } else
-          {
-            // If there's no text to read, just stop the speaking indicator
-            setIsAlimSpeaking( false );
-          }
-        } catch ( error )
-        {
-          console.error( "Error with speech synthesis:", error );
-          setIsAlimSpeaking( false );
+      setMessages((prev) => [...prev, { text: "", sender: "alim" }]);
+
+      reader.read().then(function processText({ done, value }) {
+        if (done) {
+          setAlimTyping(false);
+          setIsLoading(false);
+          // TTS logic here if needed, using the final alimResponseText
+          return;
         }
-      }
 
-      const updatedSessions = await listChatSessions();
-      setSessionList( updatedSessions );
-    } catch ( error )
-    {
-      console.error( "Error sending message:", error );
+        const chunk = decoder.decode(value, { stream: true });
+        alimResponseText += chunk;
+
+        setMessages((prevMessages) => {
+          const lastMessage = prevMessages[prevMessages.length - 1];
+          if (lastMessage.sender === "alim") {
+            const updatedMessages = [...prevMessages];
+            updatedMessages[prevMessages.length - 1] = {
+              ...lastMessage,
+              text: lastMessage.text + chunk,
+            };
+            return updatedMessages;
+          }
+          return prevMessages;
+        });
+
+        reader.read().then(processText);
+      });
+
+    } catch (error) {
+      console.error("Error sending message:", error);
       const errorMessage = {
         text: "Sorry, an error occurred. Please try again later.",
         sender: "alim",
       };
-      setMessages( ( prevMessages ) => [ ...prevMessages, errorMessage ] );
-    } finally
-    {
-      setIsLoading( false );
+      setMessages((prevMessages) => [...prevMessages, errorMessage]);
+      setIsLoading(false);
+      setAlimTyping(false);
     }
   };
+
 
   const startNewChat = async () =>
   {
@@ -277,7 +273,7 @@ function App ()
             Your trusted Islamic knowledge companion in a space of divine serenity ✨
           </p>
         </header>
-        <ChatWindow messages={messages} isLoading={isLoading} />
+        <ChatWindow messages={messages} isLoading={isLoading} alimTyping={alimTyping} />
         <ChatInput
           onSendMessage={handleSendMessage}
           onVoiceSubmit={( transcription ) => handleSendMessage( transcription, true )}

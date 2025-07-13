@@ -82,7 +82,7 @@ def retrieve(state: State):
     return {"context": retrieved_docs}
 
 
-def generate(state: State):
+async def generate(state: State):
     print(f"Generating answer for question: {state['question']}")
 
     context_str = ""
@@ -90,9 +90,8 @@ def generate(state: State):
     unique_sources: Set[str] = set()
 
     if not state["context"]:
-        return {
-            "answer": "Je suis désolé, je n'ai trouvé aucune information pertinente dans mes sources pour répondre à votre question."
-        }
+        yield "Je suis désolé, je n'ai trouvé aucune information pertinente dans mes sources pour répondre à votre question."
+        return
 
     for i, doc in enumerate(state["context"]):
         context_str += f"--- Context Snippet {i+1} ---\n{doc.page_content}\n\n"
@@ -113,7 +112,6 @@ def generate(state: State):
             f"\n\n---\n*Original Text (النص الأصلي):*\n{unique_arabic_texts}"
         )
 
-    # --- FINAL, MOST ROBUST PROMPT ---
     system_instruction = f"""
     You are Alimni, an expert Islamic knowledge assistant based on the book "Oussoûl as-Sounna" by Imâm Ahmad ibn Hanbal. Your answers must be clear, precise, and based ONLY on the provided context.
 
@@ -146,9 +144,19 @@ def generate(state: State):
     """
 
     messages = [HumanMessage(content=system_instruction)]
-    response = Ilm.invoke(messages)
+    
+    full_response = ""
+    async for chunk in Ilm.astream(messages):
+        content = chunk.content
+        if content:
+            yield content
+            full_response += content
 
-    return {"answer": response.content}
+    # Once generation is complete, we can save the full response to history
+    # This part is tricky because we need the full response.
+    # We'll handle saving history in the calling function after the stream is complete.
+    # For now, we just yield the answer chunks.
+    # We will need to modify the calling function to accumulate the full answer.
 
 
 def human_readable_chat_history(chat_history: List[BaseMessage]) -> str:
@@ -177,23 +185,33 @@ graph_builder.set_finish_point("generate")
 app_graph = graph_builder.compile()
 
 
-async def get_alim_response(user_message: str, session_id: str) -> str:
+async def get_alim_response(user_message: str, session_id: str):
     chat_history = get_session_history(session_id)
     inputs = {"question": user_message, "chat_history": chat_history}
 
+    # The graph invocation will now stream.
+    # We need to handle this differently.
+    # The `generate` function is now a generator.
+    # LangGraph's `astream` will yield the output of the nodes as they complete.
+    
+    full_alim_answer = ""
     try:
-        final_state = await app_graph.ainvoke(inputs)
-        alim_answer = final_state.get(
-            "answer", "Sorry, an error occurred while processing your request."
-        )
+        async for event in app_graph.astream(inputs):
+            if "generate" in event:
+                # The 'generate' node now yields chunks of the answer
+                async for chunk in event["generate"]:
+                    yield chunk
+                    full_alim_answer += chunk
 
+        # Now that the stream is complete, save the full history
         chat_history.append(HumanMessage(content=user_message))
-        chat_history.append(AIMessage(content=alim_answer))
+        chat_history.append(AIMessage(content=full_alim_answer))
         save_session_history(session_id, chat_history)
 
-        return alim_answer
     except Exception as e:
         print(f"Error during graph invocation: {e}")
+        # Still save the user message to history
         chat_history.append(HumanMessage(content=user_message))
         save_session_history(session_id, chat_history)
-        return "Je suis désolé, une erreur est survenue et je ne peux pas traiter votre demande pour le moment."
+        yield "Je suis désolé, une erreur est survenue et je ne peux pas traiter votre demande pour le moment."
+

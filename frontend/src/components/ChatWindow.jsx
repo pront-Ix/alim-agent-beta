@@ -1,18 +1,18 @@
-import { useRef, useEffect } from "react"
-import MessageBubble from "./MessageBubble"
-import LoadingStatus from "./LoadingStatus.jsx"
-import "./ChatWindow.css"
+import { useRef, useEffect } from "react";
+import MessageBubble from "./MessageBubble";
+import LoadingStatus from "./LoadingStatus.jsx";
+import "./ChatWindow.css";
 
-const ChatWindow = ({ messages, isLoading }) => {
-  const messagesEndRef = useRef(null)
+const ChatWindow = ({ messages, isLoading, alimTyping }) => {
+  const messagesEndRef = useRef(null);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
-  }
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
 
   useEffect(() => {
-    scrollToBottom()
-  }, [messages, isLoading])
+    scrollToBottom();
+  }, [messages, isLoading, alimTyping]);
 
   const EmptyState = () => (
     <div className="empty-chat-state">
@@ -23,7 +23,7 @@ const ChatWindow = ({ messages, isLoading }) => {
         from the Quran and Sunnah. Let's begin this blessed journey together.
       </p>
     </div>
-  )
+  );
 
   return (
     <div className="chat-window">
@@ -35,13 +35,12 @@ const ChatWindow = ({ messages, isLoading }) => {
             <MessageBubble key={index} message={msg.text} sender={msg.sender} />
           ))
         )}
-        {isLoading && (
-          <LoadingStatus text="Alim is reflecting" /> 
-        )}
+        {isLoading && <LoadingStatus text="Alim is preparing your answer..." />}
+        {alimTyping && <MessageBubble message="" sender="alim" isTyping={true} />}
         <div ref={messagesEndRef} />
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default ChatWindow
+export default ChatWindow;

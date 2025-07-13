@@ -1,4 +1,5 @@
 from fastapi import APIRouter, HTTPException
+from fastapi.responses import StreamingResponse
 from typing import List, Optional
 from app.models.chat_models import ChatRequest, ChatResponse, SessionInfo
 
@@ -9,11 +10,10 @@ from app.core.alim_agent import get_alim_response, MEMORY_DIR, get_session_histo
 
 router = APIRouter()
 
-@router.post("/message", response_model=ChatResponse)
+@router.post("/message")
 async def chat_message(request: ChatRequest):
     try:
-        response_content = await get_alim_response(request.message, request.session_id)
-        return ChatResponse(answer=response_content, session_id=request.session_id)
+        return StreamingResponse(get_alim_response(request.message, request.session_id), media_type="text/event-stream")
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
