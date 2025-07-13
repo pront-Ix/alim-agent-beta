@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.api import chat, voice 
+from app.api import chat 
 
 app = FastAPI(
     title="Alim - Islamic AI Agent API",
@@ -27,8 +27,8 @@ app.add_middleware(
 )
 
 # Include API routers
-app.include_router(chat.router, prefix="/api/v1/chat", tags=["Chat"])
-app.include_router(voice.router, prefix="/api/v1/voice", tags=["Voice"])
+app.include_router(chat.router, prefix="/api", tags=["Chat"])
+
 
 @app.get("/")
 async def read_root():

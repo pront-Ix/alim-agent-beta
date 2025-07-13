@@ -90,7 +90,7 @@ async def generate(state: State):
     unique_sources: Set[str] = set()
 
     if not state["context"]:
-        yield "Je suis désolé, je n'ai trouvé aucune information pertinente dans mes sources pour répondre à votre question."
+        yield {"answer": "Je suis désolé, je n'ai trouvé aucune information pertinente dans mes sources pour répondre à votre question."}
         return
 
     for i, doc in enumerate(state["context"]):
@@ -145,18 +145,10 @@ async def generate(state: State):
 
     messages = [HumanMessage(content=system_instruction)]
     
-    full_response = ""
     async for chunk in Ilm.astream(messages):
         content = chunk.content
         if content:
-            yield content
-            full_response += content
-
-    # Once generation is complete, we can save the full response to history
-    # This part is tricky because we need the full response.
-    # We'll handle saving history in the calling function after the stream is complete.
-    # For now, we just yield the answer chunks.
-    # We will need to modify the calling function to accumulate the full answer.
+            yield {"answer": content}
 
 
 def human_readable_chat_history(chat_history: List[BaseMessage]) -> str:
@@ -189,19 +181,14 @@ async def get_alim_response(user_message: str, session_id: str):
     chat_history = get_session_history(session_id)
     inputs = {"question": user_message, "chat_history": chat_history}
 
-    # The graph invocation will now stream.
-    # We need to handle this differently.
-    # The `generate` function is now a generator.
-    # LangGraph's `astream` will yield the output of the nodes as they complete.
-    
     full_alim_answer = ""
     try:
         async for event in app_graph.astream(inputs):
             if "generate" in event:
-                # The 'generate' node now yields chunks of the answer
-                async for chunk in event["generate"]:
-                    yield chunk
+                chunk = event["generate"].get("answer")
+                if chunk:
                     full_alim_answer += chunk
+                    yield chunk
 
         # Now that the stream is complete, save the full history
         chat_history.append(HumanMessage(content=user_message))
