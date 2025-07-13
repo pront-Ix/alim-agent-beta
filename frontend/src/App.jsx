@@ -103,7 +103,7 @@ function App ()
 
     const newUserMessage = { text: userMessage, sender: "user" };
     setMessages((prevMessages) => [...prevMessages, newUserMessage]);
-    setIsLoading(true); // Start loading
+    setIsLoading(true);
 
     try {
       const response = await fetch(`http://localhost:8000/api/message`, {
@@ -123,11 +123,31 @@ function App ()
 
       reader.read().then(function processText({ done, value }) {
         if (done) {
+          if (isVoiceInput) {
+            setIsAlimSpeaking(true);
+            const textToRead = alimResponseText.split('\n---\n')[0].trim();
+            if (textToRead) {
+              synthesizeSpeech(textToRead).then(audioUrl => {
+                const audio = new Audio(audioUrl);
+                audio.onended = () => setIsAlimSpeaking(false);
+                audio.onerror = () => {
+                  console.error("Error playing synthesized speech.");
+                  setIsAlimSpeaking(false);
+                };
+                audio.play();
+              }).catch(error => {
+                console.error("Error with speech synthesis:", error);
+                setIsAlimSpeaking(false);
+              });
+            } else {
+              setIsAlimSpeaking(false);
+            }
+          }
           return;
         }
 
         if (isFirstChunk) {
-          setIsLoading(false); // Stop loading on first chunk
+          setIsLoading(false);
           setMessages((prev) => [...prev, { text: "", sender: "alim" }]);
           isFirstChunk = false;
         }
