@@ -5,7 +5,6 @@ import {
   sendMessageToAlim,
   listChatSessions,
   fetchSessionMessages,
-  synthesizeSpeech,
 } from "./api";
 import NewConversationIcon from "./components/icons/NewConversationIcon.jsx";
 import MosqueIcon from "./components/icons/MosqueIcon.jsx";
@@ -14,7 +13,6 @@ import "./App.css";
 function App() {
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [isAlimSpeaking, setIsAlimSpeaking] = useState(false);
   const [currentSessionId, setCurrentSessionId] = useState(null);
   const [sessionList, setSessionList] = useState([]);
   const [isSessionsLoading, setIsSessionsLoading] = useState(true);
@@ -94,7 +92,7 @@ function App() {
     }
   };
 
-  const handleSendMessage = async (userMessage, isVoiceInput = false) => {
+  const handleSendMessage = async (userMessage) => {
     if (!currentSessionId) {
       console.error("Session ID is not set. Cannot send message.");
       return;
@@ -108,20 +106,6 @@ function App() {
       const response = await sendMessageToAlim(userMessage, currentSessionId);
       const alimResponse = { text: response.answer, sender: "alim" };
       setMessages((prevMessages) => [...prevMessages, alimResponse]);
-
-      if (isVoiceInput) {
-        setIsAlimSpeaking(true);
-        try {
-          const audioUrl = await synthesizeSpeech(response.answer);
-          const audio = new Audio(audioUrl);
-          audio.onended = () => setIsAlimSpeaking(false);
-          audio.onerror = () => setIsAlimSpeaking(false);
-          audio.play();
-        } catch (error) {
-          console.error("Error with speech synthesis:", error);
-          setIsAlimSpeaking(false);
-        }
-      }
 
       // After sending a message, refresh the session list
       const updatedSessions = await listChatSessions();
@@ -180,7 +164,7 @@ function App() {
   };
 
   return (
-    <div className={`App ${isAlimSpeaking ? "alim-speaking" : ""}`}>
+    <div className="App">
       <button className="mobile-menu-toggle" onClick={toggleSidebar}>
         ☰
       </button>
@@ -249,7 +233,6 @@ function App() {
         <ChatWindow messages={messages} isLoading={isLoading} />
         <ChatInput
           onSendMessage={handleSendMessage}
-          onVoiceSubmit={(transcription) => handleSendMessage(transcription, true)}
           isLoading={isLoading}
         />
       </div>

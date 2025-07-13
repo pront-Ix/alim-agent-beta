@@ -69,7 +69,7 @@ def build_and_save_vector_store():
 
     print(f"Successfully created {len(documents)} documents to process.")
 
-    embeddings = OpenAIEmbeddings(model="text-embedding-3-large")
+    embeddings = OllamaEmbeddings(model="llama4")
 
     print("Building FAISS vector store with manually crafted documents...")
     try:

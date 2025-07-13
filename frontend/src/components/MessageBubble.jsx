@@ -1,12 +1,8 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React from 'react';
 import "./MessageBubble.css";
-import PlayIcon from './icons/PlayIcon.jsx';
-import StopIcon from './icons/StopIcon.jsx'; // We'll reuse the stop icon
-import { synthesizeArabicSpeech } from '../api';
 
-const parseAlimResponse = ( text, onPlayArabic, isAudioLoading, isPlaying ) =>
+const parseAlimResponse = ( text )
 {
-  // ... (La fonction parseAlimResponse reste identique à la version précédente, mais on lui passe isPlaying)
   if ( !text ) return null;
   const parts = text.split( '\n---\n' );
   const mainAnswer = parts[ 0 ];
@@ -21,7 +17,7 @@ const parseAlimResponse = ( text, onPlayArabic, isAudioLoading, isPlaying ) =>
     ) )
   );
 
-  const renderSourceBlock = ( sourceText ) =>
+  const renderSourceBlock = ( sourceText )
   {
     if ( !sourceText ) return null;
     const lines = sourceText.replace( '*Sources:*\n', '' ).split( '\n' ).filter( line => line.trim() !== '' );
@@ -37,17 +33,14 @@ const parseAlimResponse = ( text, onPlayArabic, isAudioLoading, isPlaying ) =>
     );
   };
 
-  const renderArabicBlock = ( arabicText ) =>
+  const renderArabicBlock = ( arabicText )
   {
     if ( !arabicText ) return null;
     const arabicContent = arabicText.replace( '*Texte Original (النص الأصلي):*\n', '' );
     return (
       <div className="arabic-container">
         <div className="arabic-header">
-          <h4 className="arabic-title">Texte Original (النص الأصلي)</h4>
-          <button onClick={() => onPlayArabic( arabicContent )} className="play-arabic-button" title="Écouter/Arrêter" disabled={isAudioLoading}>
-            {isAudioLoading ? <span className="mini-spinner"></span> : ( isPlaying ? <StopIcon /> : <PlayIcon /> )}
-          </button>
+          <h4 className="arabic-title">Texte Original (النص الأصéli)</h4>
         </div>
         <p className="arabic-text">{arabicContent}</p>
       </div>
@@ -64,69 +57,8 @@ const parseAlimResponse = ( text, onPlayArabic, isAudioLoading, isPlaying ) =>
 };
 
 
-const MessageBubble = ( { message, sender } ) =>
+const MessageBubble = ( { message, sender } )
 {
-  const [ isAudioLoading, setIsAudioLoading ] = useState( false );
-  const [ isPlaying, setIsPlaying ] = useState( false );
-
-  // Use a ref to hold the audio object so we can access it to stop it
-  const audioRef = useRef( null );
-
-  // Stop audio when the component is unmounted (e.g., new chat)
-  useEffect( () =>
-  {
-    return () =>
-    {
-      if ( audioRef.current )
-      {
-        audioRef.current.pause();
-      }
-    };
-  }, [] );
-
-  const handlePlayArabic = async ( arabicText ) =>
-  {
-    if ( isAudioLoading ) return;
-
-    // If audio is currently playing, stop it.
-    if ( isPlaying && audioRef.current )
-    {
-      audioRef.current.pause();
-      audioRef.current.currentTime = 0;
-      setIsPlaying( false );
-      return;
-    }
-
-    setIsAudioLoading( true );
-    try
-    {
-      const audioUrl = await synthesizeArabicSpeech( arabicText );
-      const audio = new Audio( audioUrl );
-      audioRef.current = audio; // Store the audio object
-
-      audio.play();
-      setIsPlaying( true );
-
-      audio.onended = () =>
-      {
-        setIsPlaying( false );
-        audioRef.current = null;
-      };
-      audio.onerror = () =>
-      {
-        console.error( "Error playing the audio file." );
-        setIsPlaying( false );
-        audioRef.current = null;
-      };
-    } catch ( error )
-    {
-      console.error( "Error synthesizing Arabic speech:", error );
-    } finally
-    {
-      setIsAudioLoading( false );
-    }
-  };
-
   const isAlim = sender === 'alim';
 
   return (
@@ -136,7 +68,7 @@ const MessageBubble = ( { message, sender } ) =>
       )}
       <div className={`message-bubble ${ sender }`}>
         <div className="message-content">
-          {isAlim ? parseAlimResponse( message, handlePlayArabic, isAudioLoading, isPlaying ) : <p className="text-line">{message}</p>}
+          {isAlim ? parseAlimResponse( message ) : <p className="text-line">{message}</p>}
         </div>
       </div>
     </div>
