@@ -2,7 +2,7 @@ const API_BASE_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8000'
 
 export const sendMessageToAlim = async (message, sessionId) => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/v1/chat/message`, {
+    const response = await fetch(`${API_BASE_URL}/api/message`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -25,7 +25,7 @@ export const sendMessageToAlim = async (message, sessionId) => {
 
 export const listChatSessions = async () => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/v1/chat/sessions`);
+    const response = await fetch(`${API_BASE_URL}/api/sessions`);
     if (!response.ok) {
       throw new Error('Error fetching sessions.');
     }
@@ -39,7 +39,7 @@ export const listChatSessions = async () => {
 
 export const fetchSessionMessages = async (sessionId) => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/v1/chat/sessions/${sessionId}`);
+    const response = await fetch(`${API_BASE_URL}/api/sessions/${sessionId}`);
     if (!response.ok) {
       throw new Error('Error fetching session messages.');
     }
@@ -57,7 +57,7 @@ export const transcribeAudio = async (audioBlob) => {
   formData.append('file', audioBlob, 'recording.webm');
 
   try {
-    const response = await fetch(`${API_BASE_URL}/api/v1/voice/transcribe`, {
+    const response = await fetch(`${API_BASE_URL}/api/transcribe`, {
       method: 'POST',
       body: formData,
     });
@@ -77,7 +77,7 @@ export const transcribeAudio = async (audioBlob) => {
 
 export const synthesizeSpeech = async (text) => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/v1/voice/synthesize?text=${encodeURIComponent(text)}`, {
+    const response = await fetch(`${API_BASE_URL}/api/synthesize?text=${encodeURIComponent(text)}`, {
       method: 'POST',
       headers: {
         'Accept': 'audio/mpeg',
@@ -99,7 +99,7 @@ export const synthesizeSpeech = async (text) => {
 // NEW: Function to call the Arabic synthesis endpoint
 export const synthesizeArabicSpeech = async (text) => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/v1/voice/synthesize_arabic?text=${encodeURIComponent(text)}`, {
+    const response = await fetch(`${API_BASE_URL}/api/synthesize_arabic?text=${encodeURIComponent(text)}`, {
       method: 'POST',
       headers: {
         'Accept': 'audio/mpeg',

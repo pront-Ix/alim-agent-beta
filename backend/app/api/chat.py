@@ -1,10 +1,11 @@
-from fastapi import APIRouter, HTTPException
-from fastapi.responses import StreamingResponse
+from fastapi import APIRouter, HTTPException, File, UploadFile
+from fastapi.responses import StreamingResponse, Response
 from typing import List, Optional
 from app.models.chat_models import ChatRequest, ChatResponse, SessionInfo
 
 import os
 import json
+import openai
 
 from app.core.alim_agent import get_alim_response, MEMORY_DIR, get_session_history
 
@@ -16,6 +17,31 @@ async def chat_message(request: ChatRequest):
         return StreamingResponse(get_alim_response(request.message, request.session_id), media_type="text/event-stream")
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/transcribe")
+async def transcribe_audio(file: UploadFile = File(...)):
+    try:
+        client = openai.AsyncOpenAI()
+        transcription = await client.audio.transcriptions.create(
+            model="whisper-1",
+            file=file.file,
+        )
+        return {"transcription": transcription.text}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error during transcription: {e}")
+
+@router.post("/synthesize")
+async def synthesize_speech(text: str):
+    try:
+        client = openai.AsyncOpenAI()
+        response = await client.audio.speech.create(
+            model="tts-1",
+            voice="alloy",
+            input=text
+        )
+        return Response(content=response.content, media_type="audio/mpeg")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error during speech synthesis: {e}")
 
 @router.get("/sessions", response_model=List[SessionInfo])
 async def list_sessions():
