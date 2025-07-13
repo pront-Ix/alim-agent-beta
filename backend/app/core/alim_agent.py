@@ -183,12 +183,15 @@ async def get_alim_response(user_message: str, session_id: str):
 
     full_alim_answer = ""
     try:
-        async for event in app_graph.astream(inputs):
+        async for event in app_graph.astream(inputs, {"recursion_limit": 10}):
             if "generate" in event:
-                chunk = event["generate"].get("answer")
-                if chunk:
-                    full_alim_answer += chunk
-                    yield chunk
+                # The output of the 'generate' node is a stream itself.
+                # We need to iterate through it.
+                async for chunk in event["generate"]:
+                    answer_chunk = chunk.get("answer")
+                    if answer_chunk:
+                        full_alim_answer += answer_chunk
+                        yield answer_chunk
 
         # Now that the stream is complete, save the full history
         chat_history.append(HumanMessage(content=user_message))
