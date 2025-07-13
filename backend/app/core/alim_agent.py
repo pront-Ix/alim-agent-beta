@@ -183,12 +183,16 @@ async def get_alim_response(user_message: str, session_id: str):
 
     full_alim_answer = ""
     try:
-        async for event in app_graph.astream(inputs):
-            if "generate" in event:
-                chunk = event["generate"].get("answer")
-                if chunk:
-                    full_alim_answer += chunk
-                    yield chunk
+        async for event in app_graph.astream_events(inputs, version="v1"):
+            kind = event["event"]
+            if kind == "on_chat_model_stream":
+                content = event["data"]["chunk"].content
+                if content:
+                    full_alim_answer += content
+                    yield content
+            elif kind == "on_tool_end":
+                # Optional: you can add logic here to handle tool output if needed
+                pass
 
         # Now that the stream is complete, save the full history
         chat_history.append(HumanMessage(content=user_message))
