@@ -32,7 +32,7 @@ app.add_middleware(
 
 # Include API routers
 app.include_router(chat.router, prefix="/api", tags=["Chat"])
-app.include_router(voice.router, prefix="/api", tags=["Voice"])
+app.include_router(voice.router, prefix="/api/v1/voice", tags=["Voice"])
 
 
 @app.get("/")

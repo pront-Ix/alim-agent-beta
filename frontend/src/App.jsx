@@ -124,22 +124,40 @@ function App ()
       reader.read().then(function processText({ done, value }) {
         if (done) {
           if (isVoiceInput) {
+            console.log('Voice input detected, processing TTS...');
             setIsAlimSpeaking(true);
-            const textToRead = alimResponseText.split('\n---\n')[0].trim();
+            // Remove sources section from voice synthesis
+            let textToRead = alimResponseText.split('\n---\n')[0].trim();
+            // Remove sources section if it exists
+            if (textToRead.includes('*Sources:*')) {
+              textToRead = textToRead.split('*Sources:*')[0].trim();
+            }
+            console.log('Text to read:', textToRead);
             if (textToRead) {
               synthesizeSpeech(textToRead).then(audioUrl => {
+                console.log('Audio URL received:', audioUrl);
                 const audio = new Audio(audioUrl);
-                audio.onended = () => setIsAlimSpeaking(false);
-                audio.onerror = () => {
-                  console.error("Error playing synthesized speech.");
+                audio.onended = () => {
+                  console.log('Audio playback ended');
                   setIsAlimSpeaking(false);
                 };
-                audio.play();
+                audio.onerror = (error) => {
+                  console.error("Error playing synthesized speech:", error);
+                  setIsAlimSpeaking(false);
+                };
+                audio.onloadeddata = () => {
+                  console.log('Audio loaded, starting playback...');
+                };
+                audio.play().catch(error => {
+                  console.error('Error starting audio playback:', error);
+                  setIsAlimSpeaking(false);
+                });
               }).catch(error => {
                 console.error("Error with speech synthesis:", error);
                 setIsAlimSpeaking(false);
               });
             } else {
+              console.log('No text to read, skipping TTS');
               setIsAlimSpeaking(false);
             }
           }

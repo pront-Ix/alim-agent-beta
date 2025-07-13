@@ -57,7 +57,7 @@ export const transcribeAudio = async (audioBlob) => {
   formData.append('file', audioBlob, 'recording.webm');
 
   try {
-    const response = await fetch(`${API_BASE_URL}/api/transcribe`, {
+    const response = await fetch(`${API_BASE_URL}/api/v1/voice/transcribe`, {
       method: 'POST',
       body: formData,
     });
@@ -77,7 +77,8 @@ export const transcribeAudio = async (audioBlob) => {
 
 export const synthesizeSpeech = async (text) => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/synthesize?text=${encodeURIComponent(text)}`, {
+    console.log('Synthesizing speech for text:', text);
+    const response = await fetch(`${API_BASE_URL}/api/v1/voice/synthesize?text=${encodeURIComponent(text)}`, {
       method: 'POST',
       headers: {
         'Accept': 'audio/mpeg',
@@ -85,11 +86,16 @@ export const synthesizeSpeech = async (text) => {
     });
 
     if (!response.ok) {
-      throw new Error('Error in speech synthesis.');
+      const errorData = await response.text();
+      console.error('Speech synthesis failed:', response.status, errorData);
+      throw new Error(`Speech synthesis failed: ${response.status} ${errorData}`);
     }
 
     const audioBlob = await response.blob();
-    return URL.createObjectURL(audioBlob);
+    console.log('Audio blob size:', audioBlob.size);
+    const audioUrl = URL.createObjectURL(audioBlob);
+    console.log('Generated audio URL:', audioUrl);
+    return audioUrl;
   } catch (error) {
     console.error('Error synthesizing speech:', error);
     throw error;
@@ -99,7 +105,7 @@ export const synthesizeSpeech = async (text) => {
 // NEW: Function to call the Arabic synthesis endpoint
 export const synthesizeArabicSpeech = async (text) => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/synthesize_arabic?text=${encodeURIComponent(text)}`, {
+    const response = await fetch(`${API_BASE_URL}/api/v1/voice/synthesize_arabic?text=${encodeURIComponent(text)}`, {
       method: 'POST',
       headers: {
         'Accept': 'audio/mpeg',
