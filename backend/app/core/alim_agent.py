@@ -59,17 +59,13 @@ try:
     vector_store = FAISS.load_local(
         FAISS_INDEX_PATH, embeddings, allow_dangerous_deserialization=True
     )
-    retriever = vector_store.as_retriever(
-        search_kwargs={"k": 5}
-    )  # Retrieve more context
+    retriever = vector_store.as_retriever(search_kwargs={"k": 5})
     print("FAISS index loaded successfully.")
 except Exception as e:
     raise RuntimeError(f"Could not load FAISS index: {e}")
 
 
-Ilm = ChatOpenAI(
-    model="gpt-4o", temperature=0.1
-)  # Using a slightly more powerful model for better synthesis
+Ilm = ChatOpenAI(model="gpt-4o", temperature=0.1)
 
 
 # --- State and Graph Definition ---
@@ -94,7 +90,6 @@ def generate(state: State):
     unique_sources: Set[str] = set()
 
     if not state["context"]:
-        # Handle cases where retriever returns nothing
         return {
             "answer": "Je suis désolé, je n'ai trouvé aucune information pertinente dans mes sources pour répondre à votre question."
         }
@@ -115,24 +110,20 @@ def generate(state: State):
     if arabic_texts:
         unique_arabic_texts = "\n\n".join(sorted(list(set(arabic_texts))))
         arabic_block = (
-            f"\n\n---\n*Texte Original (النص الأصلي):*\n{unique_arabic_texts}"
+            f"\n\n---\n*Original Text (النص الأصلي):*\n{unique_arabic_texts}"
         )
 
     # --- FINAL, MOST ROBUST PROMPT ---
     system_instruction = f"""
-    You are Alim, an expert Islamic knowledge assistant based on the book "Oussoûl as-Sounna" by Imâm Ahmad ibn Hanbal. Your answers must be clear, precise, and based ONLY on the provided context.
+    You are Alimni, an expert Islamic knowledge assistant based on the book "Oussoûl as-Sounna" by Imâm Ahmad ibn Hanbal. Your answers must be clear, precise, and based ONLY on the provided context.
 
     **Your Mission:**
-    1.  **Analyze the User's Question:** Understand the user's core need.
-    
-    2.  **Handle General vs. Specific Questions:**
-        - **If the question is specific** (e.g., "What does the book say about the Quran?", "What is the view on the divine decree?"), synthesize an answer EXCLUSIVELY from the most relevant "Context Snippets".
-        - **If the question is general** (e.g., "Teach me the sunnah", "Summarize the book", "Who are you?"), you MUST formulate an introductory answer. Base this introduction on the first principles mentioned in the context, especially those concerning 'adhering to the way of the companions', 'abandoning innovations', and 'following the texts'. This is your primary function when asked a general question.
-
-    3.  **Synthesize Your Answer:** Combine the relevant information into a coherent response. **NEVER** invent information. If the specific answer isn't in the context, state that clearly.
-
-    4.  **DO NOT mention "Context" or "Snippets" in your answer.** Respond directly and naturally.
-
+    1.  **Detect Language:** You MUST detect the language of the "User's Question" (e.g., French, English, etc.).
+    2.  **Respond in Same Language:** Your entire synthesized answer (the main text part) MUST be in the same language you detected. For example, if the user asks in French, you must answer in French.
+    3.  **Handle General vs. Specific Questions:**
+        - If the question is specific, synthesize an answer EXCLUSIVELY from the "Context Snippets".
+        - If the question is general (e.g., "Summarize the book"), formulate an introductory answer based on the first principles mentioned in the context.
+    4.  **Synthesize Your Answer:** Combine the relevant information into a coherent response. NEVER invent information. If the specific answer isn't in the context, state that clearly in the user's language.
     5.  **Append Citations:** After your answer, you MUST append the source citation block and the Arabic text block exactly as they are provided below. This is mandatory.
 
     **Conversation History:**
@@ -144,7 +135,7 @@ def generate(state: State):
     **User's Question:** {state['question']}
     
     ---
-    **Your final output MUST follow this structure: [Your Answer][Source Citation Block][Original Arabic Text Block]**
+    **Your final output MUST follow this structure: [Your Answer in User's Language][Source Citation Block][Original Arabic Text Block]**
     ---
 
     **Source Citation to Append:**
