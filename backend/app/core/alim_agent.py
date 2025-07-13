@@ -183,7 +183,7 @@ async def get_alim_response(user_message: str, session_id: str):
 
     full_alim_answer = ""
     try:
-        async for event in app_graph.astream(inputs, {"recursion_limit": 10}):
+        async for event in app_graph.astream(inputs):
             if "generate" in event:
                 chunk = event["generate"].get("answer")
                 if chunk:
