@@ -1,0 +1,19 @@
+feat: Overhaul UI, knowledge base, and agent logic
+
+This major update introduces a complete visual and functional transformation of the Alim application, enhancing user experience, improving the AI's capabilities, and streamlining the knowledge management process.
+
+**UI & Frontend:**
+- **Complete Redesign:** The entire user interface has been rebuilt with a modern, Gemini-inspired aesthetic, featuring a new color palette, improved layout, and refined components.
+- **Enhanced Responsiveness:** The application is now fully responsive, with a mobile-first approach that includes a collapsible sidebar and optimized layouts for smaller screens.
+- **Improved Components:** All frontend components, including the chat window, input fields, and message bubbles, have been redesigned for better usability and visual appeal.
+- **New Features:** Added a "New Conversation" button, session timestamps, and a spiritual quote in the sidebar.
+
+**Knowledge Base & Backend:**
+- **JSONL Knowledge Base:** Replaced the previous text and PDF-based knowledge system with a more structured JSONL format. This allows for richer metadata, including Arabic text and source references.
+- **Refactored AI Agent:** The LangChain agent has been significantly updated to leverage the new knowledge base structure. It now provides more accurate and context-aware responses, including source citations and the original Arabic text.
+- **Improved Voice Services:** The voice transcription and synthesis services have been updated to use the asynchronous OpenAI client, improving performance and reliability.
+
+**Project Structure:**
+- **New `Books` Directory:** Added a `Books` directory to store the source materials for the knowledge base.
+- **Updated Dependencies:** Updated both frontend and backend dependencies to their latest versions.
+- **Removed Obsolete Files:** Deleted the old knowledge base files and other unused assets.
