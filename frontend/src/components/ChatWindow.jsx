@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect } from "react";
 import MessageBubble from "./MessageBubble";
 import LoadingStatus from "./LoadingStatus.jsx";
 import "./ChatWindow.css";
@@ -6,27 +6,16 @@ import "./ChatWindow.css";
 const ChatWindow = ({ messages, isLoading }) => {
   const messagesEndRef = useRef(null);
   const chatContainerRef = useRef(null);
-  const [isUserScrolled, setIsUserScrolled] = useState(false);
-
-  const handleScroll = () => {
-    const { scrollTop, scrollHeight, clientHeight } = chatContainerRef.current;
-    const atBottom = scrollHeight - scrollTop <= clientHeight + 50; // 50px tolerance
-    setIsUserScrolled(!atBottom);
-  };
 
   useEffect(() => {
     const chatContainer = chatContainerRef.current;
-    chatContainer.addEventListener('scroll', handleScroll);
-    return () => {
-      chatContainer.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
-
-  useEffect(() => {
-    if (!isUserScrolled) {
-      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (chatContainer) {
+      const isScrolledToBottom = chatContainer.scrollHeight - chatContainer.clientHeight <= chatContainer.scrollTop + 1;
+      if (isScrolledToBottom) {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+      }
     }
-  }, [messages, isLoading, isUserScrolled]);
+  }, [messages]);
 
   const EmptyState = () => (
     <div className="empty-chat-state">

@@ -103,7 +103,7 @@ function App ()
 
     const newUserMessage = { text: userMessage, sender: "user" };
     setMessages((prevMessages) => [...prevMessages, newUserMessage]);
-    setIsLoading(true);
+    setIsLoading(true); // Start loading
 
     try {
       const response = await fetch(`http://localhost:8000/api/message`, {
@@ -123,12 +123,12 @@ function App ()
 
       reader.read().then(function processText({ done, value }) {
         if (done) {
-          setIsLoading(false);
-          // TTS logic here if needed, using the final alimResponseText
+          // Nothing needed here, isLoading is already false
           return;
         }
 
         if (isFirstChunk) {
+          setIsLoading(false); // Stop loading on first chunk
           setMessages((prev) => [...prev, { text: "", sender: "alim" }]);
           isFirstChunk = false;
         }
@@ -137,16 +137,15 @@ function App ()
         alimResponseText += chunk;
 
         setMessages((prevMessages) => {
-          const lastMessage = prevMessages[prevMessages.length - 1];
-          if (lastMessage.sender === "alim") {
-            const updatedMessages = [...prevMessages];
-            updatedMessages[prevMessages.length - 1] = {
-              ...lastMessage,
-              text: lastMessage.text + chunk,
+          const updatedMessages = [...prevMessages];
+          const lastMessageIndex = updatedMessages.length - 1;
+          if (updatedMessages[lastMessageIndex].sender === "alim") {
+            updatedMessages[lastMessageIndex] = {
+              ...updatedMessages[lastMessageIndex],
+              text: updatedMessages[lastMessageIndex].text + chunk,
             };
-            return updatedMessages;
           }
-          return prevMessages;
+          return updatedMessages;
         });
 
         reader.read().then(processText);
