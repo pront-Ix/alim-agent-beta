@@ -123,7 +123,6 @@ function App ()
 
       reader.read().then(function processText({ done, value }) {
         if (done) {
-          // Nothing needed here, isLoading is already false
           return;
         }
 
