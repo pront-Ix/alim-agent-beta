@@ -1,33 +1,41 @@
+import tempfile
 from fastapi import APIRouter, File, UploadFile, HTTPException, Query
 from fastapi.responses import StreamingResponse
-from openai import AsyncOpenAI  # CHANGED: We import the Async client
+from openai import AsyncOpenAI
 import os
 import io
 
 router = APIRouter()
 
-# CHANGED: We instantiate the AsyncOpenAI client.
-# This should be done once per module.
 client = AsyncOpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-
 
 @router.post("/transcribe")
 async def transcribe_audio(file: UploadFile = File(...)):
+    if not file:
+        raise HTTPException(status_code=400, detail="No file was uploaded.")
+
     try:
-        audio_bytes = await file.read()
+        # Use a temporary file to store the uploaded audio
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".webm") as tmp:
+            content = await file.read()
+            tmp.write(content)
+            tmp_path = tmp.name
 
-        # The OpenAI library needs a file-like object with a name.
-        # We wrap the bytes in io.BytesIO and give it the original filename.
-        audio_file_tuple = (file.filename, io.BytesIO(audio_bytes))
+        # Open the temporary file in binary read mode and send to OpenAI
+        with open(tmp_path, "rb") as audio_file:
+            transcription = await client.audio.transcriptions.create(
+                model="whisper-1",
+                file=audio_file,
+            )
 
-        # CHANGED: We now 'await' the asynchronous call to the API.
-        transcription = await client.audio.transcriptions.create(
-            model="whisper-1", file=audio_file_tuple
-        )
         return {"transcription": transcription.text}
     except Exception as e:
         print(f"Error during transcription: {e}")
         raise HTTPException(status_code=500, detail=f"Audio transcription failed: {e}")
+    finally:
+        # Clean up the temporary file
+        if 'tmp_path' in locals() and os.path.exists(tmp_path):
+            os.remove(tmp_path)
 
 
 @router.post("/synthesize")

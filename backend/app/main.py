@@ -1,6 +1,10 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.api import chat 
+from app.api import chat, voice
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 app = FastAPI(
     title="Alim - Islamic AI Agent API",
@@ -28,7 +32,7 @@ app.add_middleware(
 
 # Include API routers
 app.include_router(chat.router, prefix="/api", tags=["Chat"])
-app.include_router(chat.router, prefix="/api", tags=["Voice"])
+app.include_router(voice.router, prefix="/api", tags=["Voice"])
 
 
 @app.get("/")

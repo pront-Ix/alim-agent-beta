@@ -47,36 +47,76 @@ const ChatInput = ( { onSendMessage, isLoading, onVoiceSubmit } ) =>
       try
       {
         const stream = await navigator.mediaDevices.getUserMedia( { audio: true } );
-        mediaRecorderRef.current = new MediaRecorder( stream );
+        
+        // Check for supported MIME types
+        const options = {
+          mimeType: 'audio/webm;codecs=opus'
+        };
+        
+        // Fallback to other formats if webm is not supported
+        if (!MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) {
+          if (MediaRecorder.isTypeSupported('audio/mp4')) {
+            options.mimeType = 'audio/mp4';
+          } else if (MediaRecorder.isTypeSupported('audio/webm')) {
+            options.mimeType = 'audio/webm';
+          } else {
+            options.mimeType = 'audio/wav';
+          }
+        }
+        
+        mediaRecorderRef.current = new MediaRecorder( stream, options );
         audioChunksRef.current = []; // Clear previous chunks
 
         mediaRecorderRef.current.ondataavailable = ( event ) =>
         {
-          audioChunksRef.current.push( event.data );
+          if (event.data.size > 0) {
+            audioChunksRef.current.push( event.data );
+          }
         };
 
         mediaRecorderRef.current.onstop = async () =>
         {
-          const audioBlob = new Blob( audioChunksRef.current, { type: 'audio/webm' } );
-          stream.getTracks().forEach( track => track.stop() ); // Release microphone
+          const mimeType = mediaRecorderRef.current.mimeType || 'audio/webm';
+          const audioBlob = new Blob( audioChunksRef.current, { type: mimeType } );
+          
+          // Clean up stream
+          stream.getTracks().forEach( track => track.stop() );
 
           if ( audioBlob.size > 0 )
           {
             try
             {
+              console.log(`Sending audio blob of size: ${audioBlob.size} bytes, type: ${mimeType}`);
               const data = await transcribeAudio( audioBlob );
-              onVoiceSubmit( data.transcription );
+              if (data && data.transcription) {
+                onVoiceSubmit( data.transcription );
+              } else {
+                console.error("No transcription received");
+                alert("No speech was detected. Please try again.");
+              }
             } catch ( error )
             {
               console.error( "Error transcribing audio:", error );
-              alert( "Sorry, there was an error processing the audio." );
+              alert( `Sorry, there was an error processing the audio: ${error.message}` );
             }
+          } else {
+            console.warn("Audio blob is empty");
+            alert("No audio was recorded. Please try again.");
           }
         };
 
-        mediaRecorderRef.current.start();
+        mediaRecorderRef.current.onerror = (event) => {
+          console.error("MediaRecorder error:", event.error);
+          alert("Recording error occurred. Please try again.");
+          setIsRecording(false);
+          setShowVoiceFeedback(false);
+        };
+
+        mediaRecorderRef.current.start(1000); // Record in 1-second chunks
         setIsRecording( true );
-        setShowVoiceFeedback( true ); // You can use this to show a visual indicator
+        setShowVoiceFeedback( true );
+        
+        console.log(`Started recording with MIME type: ${options.mimeType}`);
       } catch ( error )
       {
         console.error( "Error accessing microphone:", error );
