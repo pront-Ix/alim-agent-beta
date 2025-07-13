@@ -1,18 +1,32 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import MessageBubble from "./MessageBubble";
 import LoadingStatus from "./LoadingStatus.jsx";
 import "./ChatWindow.css";
 
-const ChatWindow = ({ messages, isLoading, alimTyping }) => {
+const ChatWindow = ({ messages, isLoading }) => {
   const messagesEndRef = useRef(null);
+  const chatContainerRef = useRef(null);
+  const [isUserScrolled, setIsUserScrolled] = useState(false);
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  const handleScroll = () => {
+    const { scrollTop, scrollHeight, clientHeight } = chatContainerRef.current;
+    const atBottom = scrollHeight - scrollTop <= clientHeight + 50; // 50px tolerance
+    setIsUserScrolled(!atBottom);
   };
 
   useEffect(() => {
-    scrollToBottom();
-  }, [messages, isLoading, alimTyping]);
+    const chatContainer = chatContainerRef.current;
+    chatContainer.addEventListener('scroll', handleScroll);
+    return () => {
+      chatContainer.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!isUserScrolled) {
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages, isLoading, isUserScrolled]);
 
   const EmptyState = () => (
     <div className="empty-chat-state">
@@ -26,7 +40,7 @@ const ChatWindow = ({ messages, isLoading, alimTyping }) => {
   );
 
   return (
-    <div className="chat-window">
+    <div className="chat-window" ref={chatContainerRef}>
       <div className="messages-container">
         {messages.length === 0 && !isLoading ? (
           <EmptyState />
@@ -36,7 +50,6 @@ const ChatWindow = ({ messages, isLoading, alimTyping }) => {
           ))
         )}
         {isLoading && <LoadingStatus text="Alim is preparing your answer..." />}
-        {alimTyping && <MessageBubble message="" sender="alim" isTyping={true} />}
         <div ref={messagesEndRef} />
       </div>
     </div>

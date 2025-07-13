@@ -104,7 +104,6 @@ function App ()
     const newUserMessage = { text: userMessage, sender: "user" };
     setMessages((prevMessages) => [...prevMessages, newUserMessage]);
     setIsLoading(true);
-    setAlimTyping(true);
 
     try {
       const response = await fetch(`http://localhost:8000/api/message`, {
@@ -120,15 +119,18 @@ function App ()
       const reader = response.body.getReader();
       const decoder = new TextDecoder();
       let alimResponseText = '';
-
-      setMessages((prev) => [...prev, { text: "", sender: "alim" }]);
+      let isFirstChunk = true;
 
       reader.read().then(function processText({ done, value }) {
         if (done) {
-          setAlimTyping(false);
           setIsLoading(false);
           // TTS logic here if needed, using the final alimResponseText
           return;
+        }
+
+        if (isFirstChunk) {
+          setMessages((prev) => [...prev, { text: "", sender: "alim" }]);
+          isFirstChunk = false;
         }
 
         const chunk = decoder.decode(value, { stream: true });
@@ -158,7 +160,6 @@ function App ()
       };
       setMessages((prevMessages) => [...prevMessages, errorMessage]);
       setIsLoading(false);
-      setAlimTyping(false);
     }
   };
 
